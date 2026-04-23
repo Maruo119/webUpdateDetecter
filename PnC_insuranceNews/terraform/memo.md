@@ -6,19 +6,17 @@ https://www.sonpo.or.jp/member/link/ev7otb0000000cwh-att/hensen.pdf
 - ＡＩＧ損保
 - 損保ジャパン
 - あいおいニッセイ同和損保
+- アニコム損保（トピックス・ニュースリリース、年度別URL対応）
 
-## 未完了
-
-お知らせ「/html/body/div[2]/div[3]/div/section[5]/div/div[1]/div/div[2]/div[1]/div[2]/div/div/div」
-ニュースリリース「/html/body/div[2]/div[3]/div/section[5]/div/div[2]/div/div[2]/div[1]/div[2]/div/div/div」
-
+## スキップ（JavaScript対応が必要）
 ### アクサ損保
 https://www.axa-direct.co.jp/company/official_info/
 
 お知らせ：「/html/body/main/div[1]/div[3]/div/div/div/section[2]」
 ニュースリリース：「/html/body/main/div[1]/div[3]/div/div/div/section[1]」
 
-### アニコム損保
+## 未完了
+### アニコム損保（完了済み・上記を参照）
 
 1. お知らせ（トピックス一覧ページ）
 URL：https://www.anicom-sompo.co.jp/topics/2026/
