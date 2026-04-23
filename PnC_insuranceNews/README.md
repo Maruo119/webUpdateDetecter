@@ -8,10 +8,15 @@
 |------|-----|---------|
 | AIG損保 | https://www.aig.co.jp/sonpo/company/news | ニュース一覧（`ul.cmp-newslist`） |
 | 損保ジャパン | https://www.sompo-japan.co.jp/ | ニュースリリース・トピックス（トップページ内） |
+| あいおいニッセイ同和損保 | https://www.aioinissaydowa.co.jp/ | お知らせ・ニュースリリース（`section.p-top-spread`） |
+
+追加予定の会社は [terraform/memo.md](terraform/memo.md) を参照。
 
 ### 新しい会社を追加する場合
 
-`src/lambda_function.py` の `SITES` リストにエントリを追加し、必要に応じて `EXTRACTORS` に対応する関数を実装する。
+1. ブラウザ DevTools で監視対象要素の XPath を調査する
+2. `src/lambda_function.py` の `SITES` リストにエントリを追加する
+3. `EXTRACTORS` 辞書に対応する `extract_xxx()` 関数を実装する
 
 ```python
 SITES = [
@@ -25,6 +30,8 @@ SITES = [
     },
 ]
 ```
+
+> **注意**: 同一 URL に複数の監視セクションがある場合（例: あいおいニッセイ同和損保のお知らせ＋ニュースリリース）、state.json のキーが URL なので1エントリにまとめる。
 
 ## Slack通知仕様
 
