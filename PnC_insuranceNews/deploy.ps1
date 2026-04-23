@@ -10,8 +10,20 @@ $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # 1. Install dependencies into src/
-Write-Host "Installing Python dependencies..." -ForegroundColor Cyan
-python -m pip install -r "$ScriptDir\requirements.txt" -t "$ScriptDir\src\" --upgrade --quiet
+#    lxml has C extensions → must download Linux wheel (Lambda runs on Amazon Linux x86_64)
+#    boto3 is pre-installed in the Lambda runtime → skip bundling
+Write-Host "Installing Python dependencies (Linux-compatible wheels)..." -ForegroundColor Cyan
+python -m pip install lxml `
+    --platform manylinux2014_x86_64 `
+    --target "$ScriptDir\src\" `
+    --only-binary=:all: `
+    --python-version 312 `
+    --implementation cp `
+    --upgrade --quiet
+
+python -m pip install requests `
+    --target "$ScriptDir\src\" `
+    --upgrade --quiet
 
 # 2. Create build dir (Terraform archive_file writes here)
 New-Item -ItemType Directory -Force -Path "$ScriptDir\build" | Out-Null

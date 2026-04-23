@@ -1,4 +1,4 @@
-# insuranceNews
+# PnC_insuranceNews
 
 損保会社のニュースリリースを監視し、新しいお知らせをSlackへ通知するチェッカー。
 
@@ -62,7 +62,7 @@ EventBridge (毎時) → Lambda → 各URLをfetch
 
 ```powershell
 cd D:\webUpdateDetecter
-.\insuranceNews\deploy.ps1 `
+.\PnC_insuranceNews\deploy.ps1 `
   -StateBucketName "my-insurance-news-state" `
   -SlackWebhookUrl "https://hooks.slack.com/services/..."
 ```
@@ -70,7 +70,7 @@ cd D:\webUpdateDetecter
 ### 再デプロイ（コード変更時）
 
 ```powershell
-cd D:\webUpdateDetecter\insuranceNews\terraform
+cd D:\webUpdateDetecter\PnC_insuranceNews\terraform
 terraform apply -auto-approve `
   -var="state_bucket_name=my-insurance-news-state" `
   -var="slack_webhook_url=https://hooks.slack.com/services/..."

@@ -72,7 +72,7 @@ data "aws_iam_policy_document" "lambda_permissions" {
 
   statement {
     actions   = ["s3:GetObject", "s3:PutObject"]
-    resources = ["${aws_s3_bucket.state.arn}/insuranceNews/*"]
+    resources = ["${aws_s3_bucket.state.arn}/PnC_insuranceNews/*"]
   }
 }
 
@@ -129,7 +129,7 @@ resource "aws_cloudwatch_event_rule" "hourly" {
 
 resource "aws_cloudwatch_event_target" "lambda" {
   rule      = aws_cloudwatch_event_rule.hourly.name
-  target_id = "insuranceNewsChecker"
+  target_id = "PnC_insuranceNewsChecker"
   arn       = aws_lambda_function.checker.arn
 }
 

@@ -1,4 +1,4 @@
-# insuranceNews — AWSインフラ
+# PnC_insuranceNews — AWSインフラ
 
 Terraformで管理するAWSリソースの詳細。
 
@@ -15,7 +15,7 @@ EventBridge Rule (rate: 1 hour)
   ├─ 環境変数: STATE_BUCKET, SLACK_WEBHOOK_URL
   │
   ├─ 読み書き → S3 Bucket (my-insurance-news-state)
-  │              └─ insuranceNews/state.json
+  │              └─ PnC_insuranceNews/state.json
   │
   └─ 通知 → Slack Incoming Webhook
 ```
@@ -27,7 +27,7 @@ EventBridge Rule (rate: 1 hour)
 | `aws_lambda_function.checker` | Lambda | `insurance-news-checker` |
 | `aws_s3_bucket.state` | S3 | `my-insurance-news-state` |
 | `aws_cloudwatch_event_rule.hourly` | EventBridge Rule | `insurance-news-checker-hourly` |
-| `aws_cloudwatch_event_target.lambda` | EventBridge Target | `insuranceNewsChecker` |
+| `aws_cloudwatch_event_target.lambda` | EventBridge Target | `PnC_insuranceNewsChecker` |
 | `aws_lambda_permission.allow_eventbridge` | Lambda Permission | `AllowExecutionFromEventBridge` |
 | `aws_iam_role.lambda` | IAM Role | `insurance-news-checker-lambda-role` |
 | `aws_iam_role_policy.lambda` | IAM Policy | `insurance-news-checker-lambda-policy` |
@@ -48,7 +48,7 @@ EventBridge Rule (rate: 1 hour)
 ```
 CloudWatch Logs: CreateLogGroup, CreateLogStream, PutLogEvents
 S3 (バケット): ListBucket
-S3 (オブジェクト): GetObject, PutObject  ※ insuranceNews/* のみ
+S3 (オブジェクト): GetObject, PutObject  ※ PnC_insuranceNews/* のみ
 ```
 
 ## Terraform操作
@@ -69,7 +69,7 @@ terraform destroy -var="state_bucket_name=xxx" -var="slack_webhook_url=xxx"
 
 ## S3の状態ファイル
 
-`insuranceNews/state.json` のスキーマ。キーがURL、値がhrefの配列。
+`PnC_insuranceNews/state.json` のスキーマ。キーがURL、値がhrefの配列。
 
 ```json
 {

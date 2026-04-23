@@ -11,7 +11,8 @@ webUpdateDetecter/
 ├── .gitignore
 ├── common/                    # 複数サイトで共通利用するユーティリティ（任意）
 │   └── python_utils/
-└── cycleLifeBlog/             # サイト: kashiwanoha-cycle-life.blog.jp
+├── cycleLifeBlog/             # サイト: kashiwanoha-cycle-life.blog.jp
+└── PnC_insuranceNews/         # サイト: 損保会社ニュースリリース
     ├── README.md              # サイト固有の仕様・手順
     ├── requirements.txt
     ├── deploy.ps1             # デプロイスクリプト (Windows PowerShell)

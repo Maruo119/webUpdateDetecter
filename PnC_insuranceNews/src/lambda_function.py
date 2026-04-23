@@ -24,7 +24,7 @@ SITES = [
 ]
 
 S3_BUCKET = os.environ.get("STATE_BUCKET", "")
-S3_KEY = "insuranceNews/state.json"
+S3_KEY = "PnC_insuranceNews/state.json"
 
 _s3 = None
 
@@ -38,7 +38,7 @@ def s3_client():
 
 def load_state() -> dict:
     if not S3_BUCKET:
-        path = "/tmp/insuranceNews_state.json"
+        path = "/tmp/PnC_insuranceNews_state.json"
         if os.path.exists(path):
             with open(path) as f:
                 return json.load(f)
@@ -53,7 +53,7 @@ def load_state() -> dict:
 
 def save_state(state: dict) -> None:
     if not S3_BUCKET:
-        with open("/tmp/insuranceNews_state.json", "w") as f:
+        with open("/tmp/PnC_insuranceNews_state.json", "w") as f:
             json.dump(state, f, ensure_ascii=False)
         return
 
@@ -110,7 +110,8 @@ def extract_sompo_japan(container: lxml_html.HtmlElement, base_url: str) -> list
     for a in container.xpath('.//a[@href]'):
         href = resolve_url(a.get("href", "").strip(), base_url)
         title = a.text_content().strip()
-        if not href or not title or href in seen:
+        # ナビゲーションリンクを除外し、実際のニュース・PDF文書のみ対象にする
+        if not href or not title or href in seen or "/media/SJNK/files/" not in href:
             continue
         seen.add(href)
         items.append({"href": href, "title": title})
