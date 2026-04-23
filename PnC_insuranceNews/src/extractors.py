@@ -161,6 +161,66 @@ def extract_sompo_direct(container: lxml_html.HtmlElement, base_url: str) -> lis
     return _extract_generic(container, base_url, skip_hrefs=("#", "/#"))
 
 
+def extract_ipet(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
+def extract_daidokasai(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    """大同火災: <a class="link"> 内の <span class="title"> からタイトルを抽出"""
+    items = []
+    seen: set[str] = set()
+    for a in container.xpath('.//a[contains(@class,"link")][@href]'):
+        href = a.get("href", "").strip()
+        title_els = a.xpath('.//span[@class="title"]')
+        title = title_els[0].text_content().strip() if title_els else a.text_content().strip()
+        if not href or not title or href in seen:
+            continue
+        seen.add(href)
+        items.append({"href": href, "title": title})
+    return items
+
+
+def extract_tokiomarine_nichido(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url, skip_hrefs=("/company/news/", "/company/news/oshirase_old.html"))
+
+
+def extract_toare(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
+def extract_nisshinfire(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    page_url = base_url.rstrip("/") + "/news_release/"
+    items = []
+    seen: set[str] = set()
+    for a in container.xpath('.//a[@href]'):
+        raw_href = a.get("href", "").strip()
+        title = " ".join(a.text_content().split())
+        if not raw_href or not title:
+            continue
+        href = urljoin(page_url, raw_href)
+        if href in seen:
+            continue
+        seen.add(href)
+        items.append({"href": href, "title": title})
+    return items
+
+
+def extract_nihonjishin(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
+def extract_ms_ins(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
+def extract_mitsui_direct(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
+def extract_meijiyasuda(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
 EXTRACTORS = {
     "aig": extract_aig,
     "sompo_japan": extract_sompo_japan,
@@ -176,4 +236,13 @@ EXTRACTORS = {
     "zkreiwa_sonpo": extract_zkreiwa_sonpo,
     "sony_sonpo": extract_sony_sonpo,
     "sompo_direct": extract_sompo_direct,
+    "ipet": extract_ipet,
+    "daidokasai": extract_daidokasai,
+    "tokiomarine_nichido": extract_tokiomarine_nichido,
+    "toare": extract_toare,
+    "nisshinfire": extract_nisshinfire,
+    "nihonjishin": extract_nihonjishin,
+    "ms_ins": extract_ms_ins,
+    "mitsui_direct": extract_mitsui_direct,
+    "meijiyasuda": extract_meijiyasuda,
 }
