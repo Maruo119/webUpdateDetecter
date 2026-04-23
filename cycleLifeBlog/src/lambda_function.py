@@ -130,7 +130,7 @@ def send_slack(site_name: str, new_articles: list[dict]) -> None:
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"*{title}*\n<{href}|記事を読む>",
+                    "text": f"<{href}|{title}>",
                 },
             }
         )
