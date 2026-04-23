@@ -121,13 +121,20 @@ aws s3 cp state_backup.json "s3://$bucket/$key"
 
 ## 注意事項・既知の問題
 
-- **Shift-JIS 対応**: `fetch_html()` は `res.content.decode(encoding)` でデコードしてから lxml に渡す。`res.text` は使わない（文字化けする）。
+- **エンコーディング**: `fetch_html()` は `res.apparent_encoding` を優先使用。HTTP デフォルトの ISO-8859-1 で文字化けするサイトに対応済み。
 - **状態キーはURL**: S3 の state.json は `{サイトURL: [href, ...]}` の形式。同一 URL に複数の監視セクションがある場合は1エントリにまとめる。
+- **年度別URL対応**: URL が年度などで変化するサイト（例: アニコム損保）は `url` の代わりに `url_template` + `{year}` プレースホルダを使用。`resolve_site_url()` が実行時に `datetime.now().year` で解決する。
+- **JS動的レンダリング非対応**: 記事が JavaScript で動的に読み込まれるサイト（例: アクサ損保）は requests+lxml では取得不可。Playwright 等の導入が必要。
 - **初回実行は通知しない**: `prev_hrefs` が空の場合はベースライン記録のみ行い、Slack 通知はしない。
 - **GitHub Push Protection**: Slack Webhook URL をコードに含めると push が拒否される。環境変数 `SLACK_WEBHOOK_URL` を使うこと。
 - **`.gitignore`**: `*/src/*/` パターンで全サイトのインストール済みライブラリを除外している。
 
+## 開発ルール
+
+- **ソース変更時は必ずブランチを切る**: `git checkout -b feature/xxx` → 実装 → PR → マージ。main への直接コミットは禁止。
+
 ## PnC_insuranceNews — 追加予定会社
 
 `PnC_insuranceNews/terraform/memo.md` を参照。
-完了済み: AIG損保、損保ジャパン、あいおいニッセイ同和損保。
+完了済み: AIG損保、損保ジャパン、あいおいニッセイ同和損保、アニコム損保。
+スキップ: アクサ損保（JS動的レンダリング）。

@@ -9,8 +9,10 @@
 | AIG損保 | https://www.aig.co.jp/sonpo/company/news | ニュース一覧（`ul.cmp-newslist`） |
 | 損保ジャパン | https://www.sompo-japan.co.jp/ | ニュースリリース・トピックス（トップページ内） |
 | あいおいニッセイ同和損保 | https://www.aioinissaydowa.co.jp/ | お知らせ・ニュースリリース（`section.p-top-spread`） |
+| アニコム損保 | https://www.anicom-sompo.co.jp/topics/{year}/ | トピックス（年度別URL） |
+| アニコム損保 | https://www.anicom-sompo.co.jp/news-release/{year}/ | ニュースリリース（年度別URL） |
 
-追加予定の会社は [terraform/memo.md](terraform/memo.md) を参照。
+追加予定の会社・スキップ済みサイト（アクサ損保など）は [terraform/memo.md](terraform/memo.md) を参照。
 
 ### 新しい会社を追加する場合
 
@@ -31,7 +33,11 @@ SITES = [
 ]
 ```
 
-> **注意**: 同一 URL に複数の監視セクションがある場合（例: あいおいニッセイ同和損保のお知らせ＋ニュースリリース）、state.json のキーが URL なので1エントリにまとめる。
+> **注意1**: 同一 URL に複数の監視セクションがある場合（例: あいおいニッセイ同和損保のお知らせ＋ニュースリリース）、state.json のキーが URL なので1エントリにまとめる。
+>
+> **注意2**: URL が年度などで変化するサイトは `url` の代わりに `url_template` を使い `{year}` プレースホルダを含める（例: アニコム損保）。実行時に `datetime.now().year` で置換される。
+>
+> **注意3**: JavaScript で動的レンダリングされるサイト（例: アクサ損保）は requests+lxml では取得できないため本システムの対象外。
 
 ## Slack通知仕様
 
@@ -84,6 +90,9 @@ terraform apply -auto-approve `
 ```
 
 ### 動作確認
+
+`deploy.ps1` はデプロイ完了後に Lambda 実行 → S3 state.json の件数表示まで自動で行う。
+手動で確認する場合：
 
 ```powershell
 aws lambda invoke --function-name insurance-news-checker response.json
