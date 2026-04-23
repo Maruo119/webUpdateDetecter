@@ -87,6 +87,55 @@ SITES = [
         "xpath": '//*[@id="main"]/div[1]/section[1]/div/div/div[2]',
         "extractor": "kyoei_kasai",
     },
+    {
+        "name": "さくら損保 お知らせ",
+        "url": "https://www.sakura-ssi.co.jp/",
+        "base_url": "https://www.sakura-ssi.co.jp",
+        "xpath": '//*[@id="home"]/div[2]/section[6]/div/ul/div/div/ul',
+        "extractor": "sakura_sonpo",
+    },
+    {
+        "name": "ジェイアイ お知らせ",
+        "url": "https://www.jihoken.co.jp/",
+        "base_url": "https://www.jihoken.co.jp",
+        "xpath": '//*[@id="top-info"]/ul',
+        "extractor": "jihoken",
+    },
+    {
+        "name": "全管協れいわ損保 お知らせ",
+        "url": "https://www.zkreiwa-sonpo.co.jp/",
+        "base_url": "https://www.zkreiwa-sonpo.co.jp",
+        "xpath": '//*[@id="post-98"]/div/div[2]/ul',
+        "extractor": "zkreiwa_sonpo",
+    },
+    {
+        "name": "ソニー損保 お知らせ",
+        "url": "https://from.sonysonpo.co.jp/topics/information/N0086000.html",
+        "base_url": "https://from.sonysonpo.co.jp",
+        "xpath": '//div[contains(@class,"information-list2")]/ul',
+        "extractor": "sony_sonpo",
+    },
+    {
+        "name": "ソニー損保 自然災害等のお知らせ",
+        "url": "https://from.sonysonpo.co.jp/topics/information/N0086000.html",
+        "base_url": "https://from.sonysonpo.co.jp",
+        "xpath": '//div[contains(@class,"archiveBox")]/ul[contains(@class,"information-list")]',
+        "extractor": "sony_sonpo",
+    },
+    {
+        "name": "SOMPOダイレクト 大切なお知らせ",
+        "url": "https://news-ins-saison.dga.jp/topics/?type=important",
+        "base_url": "https://news-ins-saison.dga.jp",
+        "xpath": '//ul[contains(@class,"p-link-news")]',
+        "extractor": "sompo_direct",
+    },
+    {
+        "name": "SOMPOダイレクト ニュースリリース",
+        "url": "https://news-ins-saison.dga.jp/topics/?type=news",
+        "base_url": "https://news-ins-saison.dga.jp",
+        "xpath": '//ul[contains(@class,"p-link-news")]',
+        "extractor": "sompo_direct",
+    },
 ]
 
 S3_BUCKET = os.environ.get("STATE_BUCKET", "")
@@ -322,6 +371,86 @@ def extract_kyoei_kasai(container: lxml_html.HtmlElement, base_url: str) -> list
     return items
 
 
+def extract_sakura_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    items = []
+    seen: set[str] = set()
+    for a in container.xpath('.//a[@href]'):
+        raw_href = a.get("href", "").strip()
+        title = " ".join(a.text_content().split())
+        if not title or not raw_href:
+            continue
+        href = resolve_url(raw_href, base_url)
+        if href in seen:
+            continue
+        seen.add(href)
+        items.append({"href": href, "title": title})
+    return items
+
+
+def extract_jihoken(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    items = []
+    seen: set[str] = set()
+    for a in container.xpath('.//a[@href]'):
+        raw_href = a.get("href", "").strip()
+        title = " ".join(a.text_content().split())
+        if not title or not raw_href:
+            continue
+        href = resolve_url(raw_href, base_url)
+        if href in seen:
+            continue
+        seen.add(href)
+        items.append({"href": href, "title": title})
+    return items
+
+
+def extract_zkreiwa_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    items = []
+    seen: set[str] = set()
+    for a in container.xpath('.//a[@href]'):
+        raw_href = a.get("href", "").strip()
+        title = " ".join(a.text_content().split())
+        if not title or not raw_href:
+            continue
+        href = resolve_url(raw_href, base_url)
+        if href in seen:
+            continue
+        seen.add(href)
+        items.append({"href": href, "title": title})
+    return items
+
+
+def extract_sony_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    items = []
+    seen: set[str] = set()
+    for a in container.xpath('.//a[@href]'):
+        raw_href = a.get("href", "").strip()
+        title = " ".join(a.text_content().split())
+        if not title or not raw_href:
+            continue
+        href = resolve_url(raw_href, base_url)
+        if href in seen:
+            continue
+        seen.add(href)
+        items.append({"href": href, "title": title})
+    return items
+
+
+def extract_sompo_direct(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    items = []
+    seen: set[str] = set()
+    for a in container.xpath('.//a[@href]'):
+        raw_href = a.get("href", "").strip()
+        title = " ".join(a.text_content().split())
+        if not title or not raw_href or raw_href in ("#", "/#"):
+            continue
+        href = resolve_url(raw_href, base_url)
+        if href in seen:
+            continue
+        seen.add(href)
+        items.append({"href": href, "title": title})
+    return items
+
+
 EXTRACTORS = {
     "aig": extract_aig,
     "sompo_japan": extract_sompo_japan,
@@ -332,6 +461,11 @@ EXTRACTORS = {
     "docomo_sompo": extract_docomo_sompo,
     "capital_sonpo": extract_capital_sonpo,
     "kyoei_kasai": extract_kyoei_kasai,
+    "sakura_sonpo": extract_sakura_sonpo,
+    "jihoken": extract_jihoken,
+    "zkreiwa_sonpo": extract_zkreiwa_sonpo,
+    "sony_sonpo": extract_sony_sonpo,
+    "sompo_direct": extract_sompo_direct,
 }
 
 
