@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import boto3
 import requests
 from lxml import html as lxml_html
@@ -20,6 +21,20 @@ SITES = [
         "base_url": "https://www.sompo-japan.co.jp",
         "xpath": '//*[@id="contentswrapper"]/div[5]',
         "extractor": "sompo_japan",
+    },
+    {
+        "name": "あいおいニッセイ同和損保 お知らせ",
+        "url": "https://www.aioinissaydowa.co.jp/",
+        "base_url": "https://www.aioinissaydowa.co.jp",
+        "xpath": "/html/body/div[2]/div[3]/div/section[5]/div/div[1]/div/div[2]/div[1]/div[2]/div/div/div",
+        "extractor": "aioi",
+    },
+    {
+        "name": "あいおいニッセイ同和損保 ニュースリリース",
+        "url": "https://www.aioinissaydowa.co.jp/",
+        "base_url": "https://www.aioinissaydowa.co.jp",
+        "xpath": "/html/body/div[2]/div[3]/div/section[5]/div/div[2]/div/div[2]/div[1]/div[2]/div/div/div",
+        "extractor": "aioi",
     },
 ]
 
@@ -118,9 +133,33 @@ def extract_sompo_japan(container: lxml_html.HtmlElement, base_url: str) -> list
     return items
 
 
+def extract_aioi(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    items = []
+    seen: set[str] = set()
+    for a in container.xpath('.//li//a[@href]'):
+        raw_href = a.get("href", "").strip()
+        title = a.text_content().strip()
+        if not raw_href or not title:
+            continue
+
+        # ニュースリリースのhrefは javascript:Jump_File('URL') 形式
+        js_match = re.search(r"Jump_File\('([^']+)'", raw_href)
+        if js_match:
+            href = js_match.group(1)
+        else:
+            href = resolve_url(raw_href, base_url)
+
+        if not href or href in seen:
+            continue
+        seen.add(href)
+        items.append({"href": href, "title": title})
+    return items
+
+
 EXTRACTORS = {
     "aig": extract_aig,
     "sompo_japan": extract_sompo_japan,
+    "aioi": extract_aioi,
 }
 
 
