@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 import re
@@ -28,6 +29,20 @@ SITES = [
         "base_url": "https://www.aioinissaydowa.co.jp",
         "xpath": "//section[contains(@class,'p-top-spread')]",
         "extractor": "aioi",
+    },
+    {
+        "name": "アニコム損保 トピックス",
+        "url_template": "https://www.anicom-sompo.co.jp/topics/{year}/",
+        "base_url": "https://www.anicom-sompo.co.jp",
+        "xpath": '//*[@id="main"]',
+        "extractor": "anicom",
+    },
+    {
+        "name": "アニコム損保 ニュースリリース",
+        "url_template": "https://www.anicom-sompo.co.jp/news-release/{year}/",
+        "base_url": "https://www.anicom-sompo.co.jp",
+        "xpath": '//*[@id="main"]',
+        "extractor": "anicom",
     },
 ]
 
@@ -83,8 +98,8 @@ def fetch_html(url: str) -> lxml_html.HtmlElement:
     }
     res = requests.get(url, headers=headers, timeout=30)
     res.raise_for_status()
-    # ページのエンコーディングを自動検出して正しくデコードする（Shift-JIS等に対応）
-    encoding = res.encoding or res.apparent_encoding or "utf-8"
+    # HTTPデフォルトのISO-8859-1より chardet の検出結果を優先する（Shift-JIS・UTF-8対応）
+    encoding = res.apparent_encoding or res.encoding or "utf-8"
     html_text = res.content.decode(encoding, errors="replace")
     return lxml_html.fromstring(html_text)
 
@@ -154,10 +169,34 @@ def extract_aioi(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
     return items
 
 
+def extract_anicom(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    items = []
+    seen: set[str] = set()
+    for a in container.xpath('.//a[@href]'):
+        raw_href = a.get("href", "").strip()
+        # タブ・改行を含む可能性があるためスペース正規化
+        title = " ".join(a.text_content().split())
+        if not title or not raw_href or raw_href.startswith("javascript:"):
+            continue
+        href = resolve_url(raw_href, base_url)
+        # 年度インデックスページ（/topics/2026/ 、/news-release/2025/ 、/news/2020/ 等）を除外
+        if re.search(r'/(topics|news-release|news)/\d{4}/?$', href):
+            continue
+        # トップページ・一覧ページ等のシンプルなパスを除外
+        if re.search(r'^https?://[^/]+(/topics/?|/news-release/?|/news/?|/?)?$', href):
+            continue
+        if href in seen:
+            continue
+        seen.add(href)
+        items.append({"href": href, "title": title})
+    return items
+
+
 EXTRACTORS = {
     "aig": extract_aig,
     "sompo_japan": extract_sompo_japan,
     "aioi": extract_aioi,
+    "anicom": extract_anicom,
 }
 
 
@@ -165,11 +204,18 @@ EXTRACTORS = {
 # Core logic
 # ---------------------------------------------------------------------------
 
+def resolve_site_url(site: dict) -> str:
+    """url_template があれば {year} を現在年に置換、なければ url をそのまま返す。"""
+    template = site.get("url_template", site["url"])
+    return template.format(year=datetime.datetime.now().year)
+
+
 def fetch_articles(site: dict) -> list[dict]:
-    tree = fetch_html(site["url"])
+    url = resolve_site_url(site)
+    tree = fetch_html(url)
     containers = tree.xpath(site["xpath"])
     if not containers:
-        raise ValueError(f"XPath '{site['xpath']}' matched nothing on {site['url']}")
+        raise ValueError(f"XPath '{site['xpath']}' matched nothing on {url}")
     extractor = EXTRACTORS[site["extractor"]]
     return extractor(containers[0], site["base_url"])
 
@@ -202,7 +248,7 @@ def send_slack(site_name: str, new_articles: list[dict]) -> None:
 
 
 def check_site(site: dict, state: dict) -> list[str]:
-    url = site["url"]
+    url = resolve_site_url(site)
     name = site["name"]
 
     try:
@@ -231,7 +277,7 @@ def lambda_handler(event, context):
     new_state = {}
 
     for site in SITES:
-        new_state[site["url"]] = check_site(site, state)
+        new_state[resolve_site_url(site)] = check_site(site, state)
 
     save_state(new_state)
     return {"statusCode": 200, "body": "OK"}
