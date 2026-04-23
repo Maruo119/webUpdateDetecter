@@ -16,20 +16,6 @@ https://www.axa-direct.co.jp/company/official_info/
 ニュースリリース：「/html/body/main/div[1]/div[3]/div/div/div/section[1]」
 
 ## 未完了
-### アニコム損保（完了済み・上記を参照）
-
-1. お知らせ（トピックス一覧ページ）
-URL：https://www.anicom-sompo.co.jp/topics/2026/
-（※年度ごとにURLが生成される構造のため、最新は2026となっています）
-
-お知らせ（記事リスト全体）：
-//*[@id="main"]/div[2]/div/dl
-
-2. ニュースリリース（ニュースリリース一覧ページ）
-URL：https://www.anicom-sompo.co.jp/news-release/2026/
-
-ニュースリリース（記事リスト全体）：
-//*[@id="main"]/div[2]/div/dl
 
 ### エイチ･エス損保
 https://www.hs-sonpo.co.jp/
