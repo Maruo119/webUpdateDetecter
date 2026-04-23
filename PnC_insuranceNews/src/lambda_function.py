@@ -84,7 +84,7 @@ SITES = [
         "name": "共栄火災 お知らせ",
         "url": "https://www.kyoeikasai.co.jp/",
         "base_url": "https://www.kyoeikasai.co.jp",
-        "xpath": '(//div[contains(@class,"news-top")])[1]',
+        "xpath": '//*[@id="main"]/div[1]/section[1]/div/div/div[2]',
         "extractor": "kyoei_kasai",
     },
 ]
