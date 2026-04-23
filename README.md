@@ -12,15 +12,23 @@ webUpdateDetecter/
 ├── common/                    # 複数サイトで共通利用するユーティリティ（任意）
 │   └── python_utils/
 ├── cycleLifeBlog/             # サイト: kashiwanoha-cycle-life.blog.jp
+│   ├── README.md              # サイト固有の仕様・手順
+│   ├── requirements.txt
+│   ├── deploy.ps1             # デプロイスクリプト (Windows PowerShell)
+│   ├── src/
+│   │   └── lambda_function.py
+│   └── terraform/
+│       ├── README.md          # AWSインフラ詳細
+│       ├── main.tf
+│       └── variables.tf
 └── PnC_insuranceNews/         # サイト: 損保会社ニュースリリース
-    ├── README.md              # サイト固有の仕様・手順
+    ├── README.md
     ├── requirements.txt
-    ├── deploy.ps1             # デプロイスクリプト (Windows PowerShell)
-    ├── deploy.sh              # デプロイスクリプト (bash)
+    ├── deploy.ps1
     ├── src/
     │   └── lambda_function.py
     └── terraform/
-        ├── README.md          # AWSインフラ詳細
+        ├── README.md
         ├── main.tf
         └── variables.tf
 ```

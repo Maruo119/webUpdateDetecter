@@ -19,8 +19,13 @@
 新記事を検知した際、以下の情報をSlack Block Kit形式で通知する。
 
 - カテゴリ名（どのページで新記事が出たか）
-- 記事タイトル（`img.pict3` の `title` 属性）
-- 記事URL（`itemBox` の親 `<a>` の `href` 属性）
+- 記事タイトルをリンク形式で1行表示（タイトルをクリックすると記事に遷移）
+
+```
+【店舗・施設】柏の葉キャンパス に新しい記事が投稿されました！
+―――――――――――――――――――――
+<記事URL|記事タイトル>
+```
 
 **初回実行時は通知しない**（現在の記事一覧をベースラインとして記録するのみ）。
 
@@ -51,10 +56,9 @@ PowerShellで実行する。
 ```powershell
 cd D:\webUpdateDetecter
 .\cycleLifeBlog\deploy.ps1 `
-  -StateBucketName "my-cycle-life-blog-state"
+  -StateBucketName "my-cycle-life-blog-state" `
+  -SlackWebhookUrl "https://hooks.slack.com/services/..."
 ```
-
-Terraform apply の際に Slack Webhook URL の入力を求められる。
 
 ### 再デプロイ（コード変更時）
 
