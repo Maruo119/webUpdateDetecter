@@ -36,3 +36,31 @@ terraform apply -auto-approve `
     -var="slack_webhook_url=$SlackWebhookUrl"
 
 Write-Host "Deploy complete." -ForegroundColor Green
+
+# ── Smoke test ──────────────────────────────────────────────────────────────
+$FunctionName = "insurance-news-checker"
+$S3Key        = "PnC_insuranceNews/state.json"
+$TmpResponse  = "$env:TEMP\lambda_response.json"
+
+Write-Host "`nInvoking Lambda..." -ForegroundColor Cyan
+aws lambda invoke --function-name $FunctionName $TmpResponse
+$response = Get-Content $TmpResponse | ConvertFrom-Json
+if ($response.statusCode -ne 200) {
+    Write-Host "[FAIL] Lambda returned unexpected response:" -ForegroundColor Red
+    Get-Content $TmpResponse
+    exit 1
+}
+Write-Host "[OK] Lambda response: statusCode=$($response.statusCode)" -ForegroundColor Green
+
+Write-Host "`nChecking S3 state ($S3Key)..." -ForegroundColor Cyan
+$stateJson = aws s3 cp "s3://$StateBucketName/$S3Key" - 2>&1
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "[FAIL] Could not read S3 state: $stateJson" -ForegroundColor Red
+    exit 1
+}
+$state = $stateJson | ConvertFrom-Json
+foreach ($url in ($state | Get-Member -MemberType NoteProperty).Name) {
+    $count = $state.$url.Count
+    Write-Host "  $url : $count 件" -ForegroundColor White
+}
+Write-Host "[OK] S3 state verified." -ForegroundColor Green
