@@ -1,0 +1,20 @@
+# Python dependencies installed into src/ for Lambda bundling
+cycleLifeBlog/src/*/
+cycleLifeBlog/src/*.dist-info/
+cycleLifeBlog/src/__pycache__/
+cycleLifeBlog/src/bin/
+cycleLifeBlog/src/*.pyd
+cycleLifeBlog/src/*.pyc
+
+# Lambda zip artifact
+cycleLifeBlog/build/
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+
+# OS
+.DS_Store
+Thumbs.db
