@@ -7,6 +7,7 @@ https://www.sonpo.or.jp/member/link/ev7otb0000000cwh-att/hensen.pdf
 - 損保ジャパン
 - あいおいニッセイ同和損保
 - アニコム損保（トピックス・ニュースリリース、年度別URL対応）
+- エイチ･エス損保（お知らせ）
 
 ## スキップ（JavaScript対応が必要）
 ### アクサ損保
@@ -16,10 +17,6 @@ https://www.axa-direct.co.jp/company/official_info/
 ニュースリリース：「/html/body/main/div[1]/div[3]/div/div/div/section[1]」
 
 ## 未完了
-
-### エイチ･エス損保
-https://www.hs-sonpo.co.jp/
-お知らせ：「//*[@id="frontpage"]/main/section[2]」
 
 ### ＳＢＩ損保
 https://www.sbisonpo.co.jp/company/

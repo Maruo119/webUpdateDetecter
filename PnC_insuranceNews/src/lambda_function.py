@@ -44,6 +44,13 @@ SITES = [
         "xpath": '//*[@id="main"]',
         "extractor": "anicom",
     },
+    {
+        "name": "エイチ･エス損保 お知らせ",
+        "url": "https://www.hs-sonpo.co.jp/",
+        "base_url": "https://www.hs-sonpo.co.jp",
+        "xpath": '//*[@id="frontpage"]/main/section[2]',
+        "extractor": "hs_sonpo",
+    },
 ]
 
 S3_BUCKET = os.environ.get("STATE_BUCKET", "")
@@ -192,11 +199,28 @@ def extract_anicom(container: lxml_html.HtmlElement, base_url: str) -> list[dict
     return items
 
 
+def extract_hs_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    items = []
+    seen: set[str] = set()
+    for a in container.xpath('.//a[@href]'):
+        raw_href = a.get("href", "").strip()
+        title = " ".join(a.text_content().split())
+        if not title or not raw_href:
+            continue
+        href = resolve_url(raw_href, base_url)
+        if href in seen:
+            continue
+        seen.add(href)
+        items.append({"href": href, "title": title})
+    return items
+
+
 EXTRACTORS = {
     "aig": extract_aig,
     "sompo_japan": extract_sompo_japan,
     "aioi": extract_aioi,
     "anicom": extract_anicom,
+    "hs_sonpo": extract_hs_sonpo,
 }
 
 
