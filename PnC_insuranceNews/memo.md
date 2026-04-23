@@ -27,6 +27,10 @@ https://www.sonpo.or.jp/member/link/ev7otb0000000cwh-att/hensen.pdf
 - 三井住友海上（ニュースリリース、年度別URL対応 `fy{year}`）
 - 三井ダイレクト損保（お知らせ・ニュースリリース）
 - 明治安田損保（お知らせ）
+- ペット＆ファミリー損保（お知らせ）
+- ヤマップネイチャランス（お知らせ、`id="__nuxt"` Vue.js SSR — JS動的レンダリングの場合は要確認）
+- 楽天損保（お知らせ）
+- レスキュー損保（お知らせ）
 
 ## スキップ（JavaScript対応が必要）
 ### アクサ損保
@@ -45,20 +49,6 @@ https://www.secom-sonpo.co.jp/
 お知らせ：「//*[@id="public"]」
 商品・サービスのお知らせ：「//*[@id="commodity"]」
 （ulが空でJSで動的レンダリング）
-
-## 未完了（DNS解決失敗・確認不可）
-
-### ペット＆ファミリー損保
-https://www.petandfamily.co.jp/
-
-### ヤマップネイチャランス
-https://yamap-naturance.com/
-
-### 楽天損保
-https://sonpo.rakuten.co.jp/
-
-### レスキュー損保
-https://www.rescue-sonpo.co.jp/
 
 ## スキップ（JavaScript対応が必要・確認済み）
 
