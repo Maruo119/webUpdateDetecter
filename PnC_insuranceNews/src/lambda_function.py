@@ -131,7 +131,11 @@ def save_state(state: dict) -> None:
     )
 
 
+_SSL_SKIP_HOSTS = {"www.kyoeikasai.co.jp"}
+
+
 def fetch_html(url: str) -> lxml_html.HtmlElement:
+    from urllib.parse import urlparse
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -139,7 +143,8 @@ def fetch_html(url: str) -> lxml_html.HtmlElement:
             "Chrome/124.0.0.0 Safari/537.36"
         )
     }
-    res = requests.get(url, headers=headers, timeout=30)
+    verify = urlparse(url).hostname not in _SSL_SKIP_HOSTS
+    res = requests.get(url, headers=headers, timeout=30, verify=verify)
     res.raise_for_status()
     # HTTPデフォルトのISO-8859-1より chardet の検出結果を優先する（Shift-JIS・UTF-8対応）
     encoding = res.apparent_encoding or res.encoding or "utf-8"
