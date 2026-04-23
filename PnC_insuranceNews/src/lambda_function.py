@@ -206,7 +206,7 @@ EXTRACTORS = {
 
 def resolve_site_url(site: dict) -> str:
     """url_template があれば {year} を現在年に置換、なければ url をそのまま返す。"""
-    template = site.get("url_template", site["url"])
+    template = site["url_template"] if "url_template" in site else site["url"]
     return template.format(year=datetime.datetime.now().year)
 
 
