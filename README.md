@@ -1,41 +1,44 @@
-# ディレクトリ構成
-webUpdateDetecter/ (Repo Root)
-├── .github/              # GitHub Actionsの設定（自動デプロイ用）
-├── common/               # 各サイトで共通で使うユーティリティ（任意）
-│   └── python_utils/     # 共通のログ出力や通知ロジックなど
-├── site-a/               # サイトA専用のディレクトリ
-│   ├── src/              # Lambdaのソースコード
-│   │   └── lambda_function.py
-│   ├── terraform/        # AWSリソース定義 (または CloudFormation/CDK)
-│   │   ├── main.tf       # S3, Lambda, EventBridge, SecretManagerを定義
-│   │   └── variables.tf
-│   └── requirements.txt  # サイトAで必要なライブラリ
-└── site-b/               # サイトB専用のディレクトリ
+# webUpdateDetecter
+
+Webページの更新を定期的に検知し、Slackへ通知するシステム。
+サイトごとにディレクトリを分け、それぞれ独立したLambda関数・AWSリソースとして管理する。
+
+## ディレクトリ構成
+
+```
+webUpdateDetecter/
+├── README.md                  # このファイル
+├── .gitignore
+├── common/                    # 複数サイトで共通利用するユーティリティ（任意）
+│   └── python_utils/
+└── cycleLifeBlog/             # サイト: kashiwanoha-cycle-life.blog.jp
+    ├── README.md              # サイト固有の仕様・手順
+    ├── requirements.txt
+    ├── deploy.ps1             # デプロイスクリプト (Windows PowerShell)
+    ├── deploy.sh              # デプロイスクリプト (bash)
     ├── src/
-    ├── terraform/
-    └── requirements.txt
+    │   └── lambda_function.py
+    └── terraform/
+        ├── README.md          # AWSインフラ詳細
+        ├── main.tf
+        └── variables.tf
+```
 
-# cycleLifeBlog
+## 新しいサイトを追加する場合
 
-## 更新チェック対象とするサイト
+1. サイト名でディレクトリを作成する（例: `newSite/`）
+2. 既存の `cycleLifeBlog/` をテンプレートとしてコピーする
+3. `src/lambda_function.py` の `SITES` リストを監視対象URLに書き換える
+4. `terraform/variables.tf` の `project_name` デフォルト値を変更する
+5. `deploy.ps1` を実行してAWSへデプロイする
+6. サイト固有の `README.md` を作成する
 
-カテゴリ：【店舗・施設】 > 柏の葉キャンパス（店舗・施設）
-https://kashiwanoha-cycle-life.blog.jp/archives/cat_861420.html
+## 共通の仕組み
 
-カテゴリ：【店舗・施設】 > 流山おおたかの森（店舗・施設）
-https://kashiwanoha-cycle-life.blog.jp/archives/cat_10041375.html
-
-カテゴリ：【店舗・施設】 > 柏・流山周辺（店舗・施設）
-https://kashiwanoha-cycle-life.blog.jp/archives/cat_10041376.html
-
-カテゴリ：【イベント】 > 柏の葉キャンパス（イベント）
-https://kashiwanoha-cycle-life.blog.jp/archives/cat_10041507.html
-
-カテゴリ：【イベント】 > 流山おおたかの森（イベント）
-https://kashiwanoha-cycle-life.blog.jp/archives/cat_10041508.html
-
-カテゴリ：【イベント】 > 柏・流山周辺（イベント）
-https://kashiwanoha-cycle-life.blog.jp/archives/cat_10041509.html
-
-カテゴリ：【鉄道】 > つくばエクスプレス
-https://kashiwanoha-cycle-life.blog.jp/archives/cat_861419.html
+| 項目 | 内容 |
+|------|------|
+| 実行環境 | AWS Lambda (Python 3.12) |
+| スケジュール | EventBridge（デフォルト: 毎時1回） |
+| 状態管理 | S3にJSONで記事URL一覧を保存 |
+| 通知 | Slack Incoming Webhook |
+| シークレット管理 | Lambda環境変数（コードに直書きしない） |
