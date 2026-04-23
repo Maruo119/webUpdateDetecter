@@ -18,6 +18,9 @@
 *.tfstate.backup
 .terraform.lock.hcl
 
+# Claude Code local settings
+.claude/settings.local.json
+
 # OS
 .DS_Store
 Thumbs.db
