@@ -18,6 +18,16 @@ https://www.sonpo.or.jp/member/link/ev7otb0000000cwh-att/hensen.pdf
 - ソニー損保（お知らせ・自然災害等のお知らせ、XPathはclass-based）
 - SOMPOダイレクト（大切なお知らせ・ニュースリリース、メインサイトはJS動的→ニュースポータル news-ins-saison.dga.jp から取得）
 
+- 第一アイペット（お知らせ）
+- 大同火災（お知らせ）
+- 東京海上日動（お知らせ）
+- トーア再保険（お知らせ）
+- 日新火災（ニュースリリース）
+- 日本地震再保険（お知らせ）
+- 三井住友海上（ニュースリリース、年度別URL対応 `fy{year}`）
+- 三井ダイレクト損保（お知らせ・ニュースリリース）
+- 明治安田損保（お知らせ）
+
 ## スキップ（JavaScript対応が必要）
 ### アクサ損保
 https://www.axa-direct.co.jp/company/official_info/
@@ -36,39 +46,22 @@ https://www.secom-sonpo.co.jp/
 商品・サービスのお知らせ：「//*[@id="commodity"]」
 （ulが空でJSで動的レンダリング）
 
-## 未完了
+## 未完了（DNS解決失敗・確認不可）
 
-### 第一アイペット
-https://www.ipet-ins.com/info/
-お知らせ：「/html/body/main/div/div/div/ul」
+### ペット＆ファミリー損保
+https://www.petandfamily.co.jp/
 
-### 大同火災
-https://www.daidokasai.co.jp/news/
-お知らせ：「//*[@id="top"]/main/section[2]/div/div/div/ul」
+### ヤマップネイチャランス
+https://yamap-naturance.com/
+
+### 楽天損保
+https://sonpo.rakuten.co.jp/
+
+### レスキュー損保
+https://www.rescue-sonpo.co.jp/
+
+## スキップ（JavaScript対応が必要・確認済み）
 
 ### 東京海上ダイレクト
 https://www.e-design.net/
-お知らせ：「/html/body/div[1]/main/article/section[9]/div/div/div[1]/div[2]」
-ニュースリリース：「/html/body/div[1]/main/article/section[9]/div/div/div[2]/div[2]」
-
-### 東京海上日動
-
-### トーア再保険
-
-### 日新火災
-
-### 日本地震
-
-### ペット＆ファミリー損保
-
-### 三井住友海上
-
-### 三井ダイレクト損保
-
-### 明治安田損保
-
-### ヤマップネイチャランス
-
-### 楽天損保
-
-### レスキュー損保
+お知らせ・ニュースリリースともにJS動的レンダリング（div内リンクが「一覧はこちら」のみ）
