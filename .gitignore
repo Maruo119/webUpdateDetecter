@@ -5,6 +5,11 @@ cycleLifeBlog/src/__pycache__/
 cycleLifeBlog/src/bin/
 cycleLifeBlog/src/*.pyd
 cycleLifeBlog/src/*.pyc
+cycleLifeBlog/src/*.py
+!cycleLifeBlog/src/lambda_function.py
+
+# Terraform test output
+cycleLifeBlog/terraform/response.json
 
 # Lambda zip artifact
 cycleLifeBlog/build/
