@@ -7,6 +7,8 @@
 */src/*.pyc
 */src/*.py
 !*/src/lambda_function.py
+!*/src/sites.py
+!*/src/extractors.py
 
 # Terraform test output & Lambda zip artifact (all sites)
 */terraform/response.json

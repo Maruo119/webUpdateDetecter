@@ -1,147 +1,20 @@
 import datetime
 import json
 import os
-import re
-from urllib.parse import urljoin
+from urllib.parse import urlparse
 import boto3
 import requests
 from lxml import html as lxml_html
 
+from sites import SITES
+from extractors import EXTRACTORS
+
 SLACK_WEBHOOK_URL = os.environ["SLACK_WEBHOOK_URL"]
-
-SITES = [
-    {
-        "name": "AIG損保 ニュースリリース",
-        "url": "https://www.aig.co.jp/sonpo/company/news",
-        "base_url": "https://www.aig.co.jp",
-        "xpath": "/html/body/div[1]/div[1]/div/div[3]/div/div[3]/ul",
-        "extractor": "aig",
-    },
-    {
-        "name": "損保ジャパン ニュースリリース",
-        "url": "https://www.sompo-japan.co.jp/",
-        "base_url": "https://www.sompo-japan.co.jp",
-        "xpath": '//*[@id="contentswrapper"]/div[5]',
-        "extractor": "sompo_japan",
-    },
-    {
-        "name": "あいおいニッセイ同和損保 お知らせ・ニュースリリース",
-        "url": "https://www.aioinissaydowa.co.jp/",
-        "base_url": "https://www.aioinissaydowa.co.jp",
-        "xpath": "//section[contains(@class,'p-top-spread')]",
-        "extractor": "aioi",
-    },
-    {
-        "name": "アニコム損保 トピックス",
-        "url_template": "https://www.anicom-sompo.co.jp/topics/{year}/",
-        "base_url": "https://www.anicom-sompo.co.jp",
-        "xpath": '//*[@id="main"]',
-        "extractor": "anicom",
-    },
-    {
-        "name": "アニコム損保 ニュースリリース",
-        "url_template": "https://www.anicom-sompo.co.jp/news-release/{year}/",
-        "base_url": "https://www.anicom-sompo.co.jp",
-        "xpath": '//*[@id="main"]',
-        "extractor": "anicom",
-    },
-    {
-        "name": "エイチ･エス損保 お知らせ",
-        "url": "https://www.hs-sonpo.co.jp/",
-        "base_url": "https://www.hs-sonpo.co.jp",
-        "xpath": '//*[@id="frontpage"]/main/section[2]',
-        "extractor": "hs_sonpo",
-    },
-    {
-        "name": "ＳＢＩ損保 ニュースリリース",
-        "url": "https://www.sbisonpo.co.jp/company/",
-        "base_url": "https://www.sbisonpo.co.jp",
-        "xpath": '//*[@id="wrapper"]/div[4]/div/div[5]/div/div/div[1]',
-        "extractor": "sbi_sonpo",
-    },
-    {
-        "name": "ＳＢＩ損保 お知らせ",
-        "url": "https://www.sbisonpo.co.jp/company/",
-        "base_url": "https://www.sbisonpo.co.jp",
-        "xpath": '//*[@id="wrapper"]/div[4]/div/div[5]/div/div/div[2]',
-        "extractor": "sbi_sonpo",
-    },
-    {
-        "name": "ドコモ損保 お知らせ",
-        "url": "https://www.docomo-sompo.com/news/",
-        "base_url": "https://www.docomo-sompo.com",
-        "xpath": '//*[@id="main"]/div[2]/div/div/ul',
-        "extractor": "docomo_sompo",
-    },
-    {
-        "name": "キャピタル損保 お知らせ",
-        "url": "https://www.capital-sonpo.co.jp/",
-        "base_url": "https://www.capital-sonpo.co.jp",
-        "xpath": '//*[@id="Contents"]/div/div[3]/div/dl',
-        "extractor": "capital_sonpo",
-    },
-    {
-        "name": "共栄火災 お知らせ",
-        "url": "https://www.kyoeikasai.co.jp/",
-        "base_url": "https://www.kyoeikasai.co.jp",
-        "xpath": '//*[@id="main"]/div[1]/section[1]/div/div/div[2]',
-        "extractor": "kyoei_kasai",
-    },
-    {
-        "name": "さくら損保 お知らせ",
-        "url": "https://www.sakura-ssi.co.jp/",
-        "base_url": "https://www.sakura-ssi.co.jp",
-        "xpath": '//*[@id="home"]/div[2]/section[6]/div/ul/div/div/ul',
-        "extractor": "sakura_sonpo",
-    },
-    {
-        "name": "ジェイアイ お知らせ",
-        "url": "https://www.jihoken.co.jp/",
-        "base_url": "https://www.jihoken.co.jp",
-        "xpath": '//*[@id="top-info"]/ul',
-        "extractor": "jihoken",
-    },
-    {
-        "name": "全管協れいわ損保 お知らせ",
-        "url": "https://www.zkreiwa-sonpo.co.jp/",
-        "base_url": "https://www.zkreiwa-sonpo.co.jp",
-        "xpath": '//*[@id="post-98"]/div/div[2]/ul',
-        "extractor": "zkreiwa_sonpo",
-    },
-    {
-        "name": "ソニー損保 お知らせ",
-        "url": "https://from.sonysonpo.co.jp/topics/information/N0086000.html",
-        "base_url": "https://from.sonysonpo.co.jp",
-        "xpath": '//div[contains(@class,"information-list2")]/ul',
-        "extractor": "sony_sonpo",
-    },
-    {
-        "name": "ソニー損保 自然災害等のお知らせ",
-        "url": "https://from.sonysonpo.co.jp/topics/information/N0086000.html",
-        "base_url": "https://from.sonysonpo.co.jp",
-        "xpath": '//div[contains(@class,"archiveBox")]/ul[contains(@class,"information-list")]',
-        "extractor": "sony_sonpo",
-    },
-    {
-        "name": "SOMPOダイレクト 大切なお知らせ",
-        "url": "https://news-ins-saison.dga.jp/topics/?type=important",
-        "base_url": "https://news-ins-saison.dga.jp",
-        "xpath": '//ul[contains(@class,"p-link-news")]',
-        "extractor": "sompo_direct",
-    },
-    {
-        "name": "SOMPOダイレクト ニュースリリース",
-        "url": "https://news-ins-saison.dga.jp/topics/?type=news",
-        "base_url": "https://news-ins-saison.dga.jp",
-        "xpath": '//ul[contains(@class,"p-link-news")]',
-        "extractor": "sompo_direct",
-    },
-]
-
 S3_BUCKET = os.environ.get("STATE_BUCKET", "")
 S3_KEY = "PnC_insuranceNews/state.json"
 
 _s3 = None
+_SSL_SKIP_HOSTS = {"www.kyoeikasai.co.jp"}
 
 
 def s3_client():
@@ -158,7 +31,6 @@ def load_state() -> dict:
             with open(path) as f:
                 return json.load(f)
         return {}
-
     try:
         res = s3_client().get_object(Bucket=S3_BUCKET, Key=S3_KEY)
         return json.loads(res["Body"].read().decode("utf-8"))
@@ -171,7 +43,6 @@ def save_state(state: dict) -> None:
         with open("/tmp/PnC_insuranceNews_state.json", "w") as f:
             json.dump(state, f, ensure_ascii=False)
         return
-
     s3_client().put_object(
         Bucket=S3_BUCKET,
         Key=S3_KEY,
@@ -180,11 +51,7 @@ def save_state(state: dict) -> None:
     )
 
 
-_SSL_SKIP_HOSTS = {"www.kyoeikasai.co.jp"}
-
-
 def fetch_html(url: str) -> lxml_html.HtmlElement:
-    from urllib.parse import urlparse
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -201,280 +68,7 @@ def fetch_html(url: str) -> lxml_html.HtmlElement:
     return lxml_html.fromstring(html_text)
 
 
-def resolve_url(href: str, base_url: str) -> str:
-    if href.startswith("http"):
-        return href
-    if href.startswith("/"):
-        return base_url.rstrip("/") + href
-    return href
-
-
-# ---------------------------------------------------------------------------
-# Extractors — one per site structure
-# ---------------------------------------------------------------------------
-
-def extract_aig(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
-    items = []
-    for li in container.xpath('.//li[contains(@class,"cmp-newslist__item")]'):
-        a_els = li.xpath('.//a[contains(@class,"cmp-newslist__link")]')
-        title_els = li.xpath('.//div[contains(@class,"cmp-newslist-item__title")]')
-        if not a_els:
-            continue
-        href = resolve_url(a_els[0].get("href", "").strip(), base_url)
-        title = title_els[0].text_content().strip() if title_els else ""
-        if href:
-            items.append({"href": href, "title": title})
-    return items
-
-
-def extract_sompo_japan(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
-    items = []
-    seen: set[str] = set()
-    for a in container.xpath('.//a[@href]'):
-        href = resolve_url(a.get("href", "").strip(), base_url)
-        title = a.text_content().strip()
-        # ナビゲーションリンクを除外し、実際のニュース・PDF文書のみ対象にする
-        if not href or not title or href in seen or "/media/SJNK/files/" not in href:
-            continue
-        seen.add(href)
-        items.append({"href": href, "title": title})
-    return items
-
-
-def extract_aioi(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
-    items = []
-    seen: set[str] = set()
-    for a in container.xpath('.//a[@href]'):
-        raw_href = a.get("href", "").strip()
-        title = a.text_content().strip()
-
-        # ナビゲーションリンク（一覧はこちら等）を除外
-        if not title or title in ("一覧はこちら",):
-            continue
-
-        # ニュースリリース: javascript:Jump_File('URL') からURLを抽出
-        js_match = re.search(r"Jump_File\('([^']+)'", raw_href)
-        if js_match:
-            href = js_match.group(1)
-        else:
-            href = resolve_url(raw_href, base_url)
-
-        if not href or href in seen:
-            continue
-        seen.add(href)
-        items.append({"href": href, "title": title})
-    return items
-
-
-def extract_anicom(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
-    items = []
-    seen: set[str] = set()
-    for a in container.xpath('.//a[@href]'):
-        raw_href = a.get("href", "").strip()
-        # タブ・改行を含む可能性があるためスペース正規化
-        title = " ".join(a.text_content().split())
-        if not title or not raw_href or raw_href.startswith("javascript:"):
-            continue
-        href = resolve_url(raw_href, base_url)
-        # 年度インデックスページ（/topics/2026/ 、/news-release/2025/ 、/news/2020/ 等）を除外
-        if re.search(r'/(topics|news-release|news)/\d{4}/?$', href):
-            continue
-        # トップページ・一覧ページ等のシンプルなパスを除外
-        if re.search(r'^https?://[^/]+(/topics/?|/news-release/?|/news/?|/?)?$', href):
-            continue
-        if href in seen:
-            continue
-        seen.add(href)
-        items.append({"href": href, "title": title})
-    return items
-
-
-def extract_hs_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
-    items = []
-    seen: set[str] = set()
-    for a in container.xpath('.//a[@href]'):
-        raw_href = a.get("href", "").strip()
-        title = " ".join(a.text_content().split())
-        if not title or not raw_href:
-            continue
-        href = resolve_url(raw_href, base_url)
-        if href in seen:
-            continue
-        seen.add(href)
-        items.append({"href": href, "title": title})
-    return items
-
-
-def extract_sbi_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
-    items = []
-    seen: set[str] = set()
-    for a in container.xpath('.//a[@href]'):
-        raw_href = a.get("href", "").strip()
-        title = " ".join(a.text_content().split())
-        if not title or not raw_href or title in ("一覧",):
-            continue
-        href = resolve_url(raw_href, base_url)
-        if href in seen:
-            continue
-        seen.add(href)
-        items.append({"href": href, "title": title})
-    return items
-
-
-def extract_docomo_sompo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
-    items = []
-    seen: set[str] = set()
-    for a in container.xpath('.//a[@href]'):
-        raw_href = a.get("href", "").strip()
-        title = " ".join(a.text_content().split())
-        if not title or not raw_href:
-            continue
-        href = resolve_url(raw_href, base_url)
-        if href in seen:
-            continue
-        seen.add(href)
-        items.append({"href": href, "title": title})
-    return items
-
-
-def extract_capital_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
-    items = []
-    seen: set[str] = set()
-    page_url = base_url.rstrip("/") + "/"
-    for a in container.xpath('.//a[@href]'):
-        raw_href = a.get("href", "").strip()
-        title = " ".join(a.text_content().split())
-        if not title or not raw_href:
-            continue
-        # urljoin で相対URL（/なし）も正しく解決する
-        href = urljoin(page_url, raw_href)
-        if href in seen:
-            continue
-        seen.add(href)
-        items.append({"href": href, "title": title})
-    return items
-
-
-def extract_kyoei_kasai(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
-    items = []
-    seen: set[str] = set()
-    for a in container.xpath('.//a[@href]'):
-        raw_href = a.get("href", "").strip()
-        title = " ".join(a.text_content().split())
-        if not title or not raw_href:
-            continue
-        href = resolve_url(raw_href, base_url)
-        if href in seen:
-            continue
-        seen.add(href)
-        items.append({"href": href, "title": title})
-    return items
-
-
-def extract_sakura_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
-    items = []
-    seen: set[str] = set()
-    for a in container.xpath('.//a[@href]'):
-        raw_href = a.get("href", "").strip()
-        title = " ".join(a.text_content().split())
-        if not title or not raw_href:
-            continue
-        href = resolve_url(raw_href, base_url)
-        if href in seen:
-            continue
-        seen.add(href)
-        items.append({"href": href, "title": title})
-    return items
-
-
-def extract_jihoken(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
-    items = []
-    seen: set[str] = set()
-    for a in container.xpath('.//a[@href]'):
-        raw_href = a.get("href", "").strip()
-        title = " ".join(a.text_content().split())
-        if not title or not raw_href:
-            continue
-        href = resolve_url(raw_href, base_url)
-        if href in seen:
-            continue
-        seen.add(href)
-        items.append({"href": href, "title": title})
-    return items
-
-
-def extract_zkreiwa_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
-    items = []
-    seen: set[str] = set()
-    for a in container.xpath('.//a[@href]'):
-        raw_href = a.get("href", "").strip()
-        title = " ".join(a.text_content().split())
-        if not title or not raw_href:
-            continue
-        href = resolve_url(raw_href, base_url)
-        if href in seen:
-            continue
-        seen.add(href)
-        items.append({"href": href, "title": title})
-    return items
-
-
-def extract_sony_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
-    items = []
-    seen: set[str] = set()
-    for a in container.xpath('.//a[@href]'):
-        raw_href = a.get("href", "").strip()
-        title = " ".join(a.text_content().split())
-        if not title or not raw_href:
-            continue
-        href = resolve_url(raw_href, base_url)
-        if href in seen:
-            continue
-        seen.add(href)
-        items.append({"href": href, "title": title})
-    return items
-
-
-def extract_sompo_direct(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
-    items = []
-    seen: set[str] = set()
-    for a in container.xpath('.//a[@href]'):
-        raw_href = a.get("href", "").strip()
-        title = " ".join(a.text_content().split())
-        if not title or not raw_href or raw_href in ("#", "/#"):
-            continue
-        href = resolve_url(raw_href, base_url)
-        if href in seen:
-            continue
-        seen.add(href)
-        items.append({"href": href, "title": title})
-    return items
-
-
-EXTRACTORS = {
-    "aig": extract_aig,
-    "sompo_japan": extract_sompo_japan,
-    "aioi": extract_aioi,
-    "anicom": extract_anicom,
-    "hs_sonpo": extract_hs_sonpo,
-    "sbi_sonpo": extract_sbi_sonpo,
-    "docomo_sompo": extract_docomo_sompo,
-    "capital_sonpo": extract_capital_sonpo,
-    "kyoei_kasai": extract_kyoei_kasai,
-    "sakura_sonpo": extract_sakura_sonpo,
-    "jihoken": extract_jihoken,
-    "zkreiwa_sonpo": extract_zkreiwa_sonpo,
-    "sony_sonpo": extract_sony_sonpo,
-    "sompo_direct": extract_sompo_direct,
-}
-
-
-# ---------------------------------------------------------------------------
-# Core logic
-# ---------------------------------------------------------------------------
-
 def resolve_site_url(site: dict) -> str:
-    """url_template があれば {year} を現在年に置換、なければ url をそのまま返す。"""
     template = site["url_template"] if "url_template" in site else site["url"]
     return template.format(year=datetime.datetime.now().year)
 
@@ -506,10 +100,7 @@ def send_slack(site_name: str, new_articles: list[dict]) -> None:
         blocks.append(
             {
                 "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f"<{href}|{title}>",
-                },
+                "text": {"type": "mrkdwn", "text": f"<{href}|{title}>"},
             }
         )
     res = requests.post(SLACK_WEBHOOK_URL, json={"blocks": blocks}, timeout=10)
@@ -519,7 +110,6 @@ def send_slack(site_name: str, new_articles: list[dict]) -> None:
 def check_site(site: dict, state: dict) -> list[str]:
     url = resolve_site_url(site)
     name = site["name"]
-
     try:
         articles = fetch_articles(site)
     except Exception as e:
@@ -544,10 +134,8 @@ def check_site(site: dict, state: dict) -> list[str]:
 def lambda_handler(event, context):
     state = load_state()
     new_state = {}
-
     for site in SITES:
         new_state[resolve_site_url(site)] = check_site(site, state)
-
     save_state(new_state)
     return {"statusCode": 200, "body": "OK"}
 
