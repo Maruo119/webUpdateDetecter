@@ -23,17 +23,10 @@ SITES = [
         "extractor": "sompo_japan",
     },
     {
-        "name": "あいおいニッセイ同和損保 お知らせ",
+        "name": "あいおいニッセイ同和損保 お知らせ・ニュースリリース",
         "url": "https://www.aioinissaydowa.co.jp/",
         "base_url": "https://www.aioinissaydowa.co.jp",
-        "xpath": "/html/body/div[2]/div[3]/div/section[5]/div/div[1]/div/div[2]/div[1]/div[2]/div/div/div",
-        "extractor": "aioi",
-    },
-    {
-        "name": "あいおいニッセイ同和損保 ニュースリリース",
-        "url": "https://www.aioinissaydowa.co.jp/",
-        "base_url": "https://www.aioinissaydowa.co.jp",
-        "xpath": "/html/body/div[2]/div[3]/div/section[5]/div/div[2]/div/div[2]/div[1]/div[2]/div/div/div",
+        "xpath": "//section[contains(@class,'p-top-spread')]",
         "extractor": "aioi",
     },
 ]
@@ -90,7 +83,10 @@ def fetch_html(url: str) -> lxml_html.HtmlElement:
     }
     res = requests.get(url, headers=headers, timeout=30)
     res.raise_for_status()
-    return lxml_html.fromstring(res.content)
+    # ページのエンコーディングを自動検出して正しくデコードする（Shift-JIS等に対応）
+    encoding = res.encoding or res.apparent_encoding or "utf-8"
+    html_text = res.content.decode(encoding, errors="replace")
+    return lxml_html.fromstring(html_text)
 
 
 def resolve_url(href: str, base_url: str) -> str:
@@ -136,13 +132,15 @@ def extract_sompo_japan(container: lxml_html.HtmlElement, base_url: str) -> list
 def extract_aioi(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
     items = []
     seen: set[str] = set()
-    for a in container.xpath('.//li//a[@href]'):
+    for a in container.xpath('.//a[@href]'):
         raw_href = a.get("href", "").strip()
         title = a.text_content().strip()
-        if not raw_href or not title:
+
+        # ナビゲーションリンク（一覧はこちら等）を除外
+        if not title or title in ("一覧はこちら",):
             continue
 
-        # ニュースリリースのhrefは javascript:Jump_File('URL') 形式
+        # ニュースリリース: javascript:Jump_File('URL') からURLを抽出
         js_match = re.search(r"Jump_File\('([^']+)'", raw_href)
         if js_match:
             href = js_match.group(1)
