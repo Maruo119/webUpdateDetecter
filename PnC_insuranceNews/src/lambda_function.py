@@ -2,6 +2,7 @@ import datetime
 import json
 import os
 import re
+from urllib.parse import urljoin
 import boto3
 import requests
 from lxml import html as lxml_html
@@ -50,6 +51,41 @@ SITES = [
         "base_url": "https://www.hs-sonpo.co.jp",
         "xpath": '//*[@id="frontpage"]/main/section[2]',
         "extractor": "hs_sonpo",
+    },
+    {
+        "name": "ＳＢＩ損保 ニュースリリース",
+        "url": "https://www.sbisonpo.co.jp/company/",
+        "base_url": "https://www.sbisonpo.co.jp",
+        "xpath": '//*[@id="wrapper"]/div[4]/div/div[5]/div/div/div[1]',
+        "extractor": "sbi_sonpo",
+    },
+    {
+        "name": "ＳＢＩ損保 お知らせ",
+        "url": "https://www.sbisonpo.co.jp/company/",
+        "base_url": "https://www.sbisonpo.co.jp",
+        "xpath": '//*[@id="wrapper"]/div[4]/div/div[5]/div/div/div[2]',
+        "extractor": "sbi_sonpo",
+    },
+    {
+        "name": "ドコモ損保 お知らせ",
+        "url": "https://www.docomo-sompo.com/news/",
+        "base_url": "https://www.docomo-sompo.com",
+        "xpath": '//*[@id="main"]/div[2]/div/div/ul',
+        "extractor": "docomo_sompo",
+    },
+    {
+        "name": "キャピタル損保 お知らせ",
+        "url": "https://www.capital-sonpo.co.jp/",
+        "base_url": "https://www.capital-sonpo.co.jp",
+        "xpath": '//*[@id="Contents"]/div/div[3]/div/dl',
+        "extractor": "capital_sonpo",
+    },
+    {
+        "name": "共栄火災 お知らせ",
+        "url": "https://www.kyoeikasai.co.jp/",
+        "base_url": "https://www.kyoeikasai.co.jp",
+        "xpath": '(//div[contains(@class,"news-top")])[1]',
+        "extractor": "kyoei_kasai",
     },
 ]
 
@@ -215,12 +251,82 @@ def extract_hs_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[di
     return items
 
 
+def extract_sbi_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    items = []
+    seen: set[str] = set()
+    for a in container.xpath('.//a[@href]'):
+        raw_href = a.get("href", "").strip()
+        title = " ".join(a.text_content().split())
+        if not title or not raw_href or title in ("一覧",):
+            continue
+        href = resolve_url(raw_href, base_url)
+        if href in seen:
+            continue
+        seen.add(href)
+        items.append({"href": href, "title": title})
+    return items
+
+
+def extract_docomo_sompo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    items = []
+    seen: set[str] = set()
+    for a in container.xpath('.//a[@href]'):
+        raw_href = a.get("href", "").strip()
+        title = " ".join(a.text_content().split())
+        if not title or not raw_href:
+            continue
+        href = resolve_url(raw_href, base_url)
+        if href in seen:
+            continue
+        seen.add(href)
+        items.append({"href": href, "title": title})
+    return items
+
+
+def extract_capital_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    items = []
+    seen: set[str] = set()
+    page_url = base_url.rstrip("/") + "/"
+    for a in container.xpath('.//a[@href]'):
+        raw_href = a.get("href", "").strip()
+        title = " ".join(a.text_content().split())
+        if not title or not raw_href:
+            continue
+        # urljoin で相対URL（/なし）も正しく解決する
+        href = urljoin(page_url, raw_href)
+        if href in seen:
+            continue
+        seen.add(href)
+        items.append({"href": href, "title": title})
+    return items
+
+
+def extract_kyoei_kasai(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    items = []
+    seen: set[str] = set()
+    for a in container.xpath('.//a[@href]'):
+        raw_href = a.get("href", "").strip()
+        title = " ".join(a.text_content().split())
+        if not title or not raw_href:
+            continue
+        href = resolve_url(raw_href, base_url)
+        if href in seen:
+            continue
+        seen.add(href)
+        items.append({"href": href, "title": title})
+    return items
+
+
 EXTRACTORS = {
     "aig": extract_aig,
     "sompo_japan": extract_sompo_japan,
     "aioi": extract_aioi,
     "anicom": extract_anicom,
     "hs_sonpo": extract_hs_sonpo,
+    "sbi_sonpo": extract_sbi_sonpo,
+    "docomo_sompo": extract_docomo_sompo,
+    "capital_sonpo": extract_capital_sonpo,
+    "kyoei_kasai": extract_kyoei_kasai,
 }
 
 
