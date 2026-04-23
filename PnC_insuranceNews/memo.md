@@ -25,6 +25,7 @@ https://www.au-sonpo.co.jp/corporate/news/
 お知らせ＆プレスリリース：「/html/body/main/div」
 （記事一覧がJSで動的レンダリング）
 
+<<<<<<< HEAD
 ## 未完了
 
 ### さくら損保
@@ -35,10 +36,13 @@ https://www.sakura-ssi.co.jp/
 https://www.jihoken.co.jp/
 お知らせ：「//*[@id="top-info"]/ul」
 
+=======
+>>>>>>> 2a762420228696f4eff9979da87c7bf616dfe536
 ### セコム損保
 https://www.secom-sonpo.co.jp/
 お知らせ：「//*[@id="public"]」
 商品・サービスのお知らせ：「//*[@id="commodity"]」
+<<<<<<< HEAD
 
 ### 全管協れいわ損保
 https://www.zkreiwa-sonpo.co.jp/
@@ -54,6 +58,11 @@ https://from.sonysonpo.co.jp/topics/information/N0086000.html
 https://www.sompo-direct.co.jp/
 お知らせ：「//*[@id="important"]/ul」
 ニュースリリース：「//*[@id="news"]/ul」
+=======
+（ulが空でJSで動的レンダリング）
+
+## 未完了
+>>>>>>> 2a762420228696f4eff9979da87c7bf616dfe536
 
 ### 第一アイペット
 https://www.ipet-ins.com/info/
