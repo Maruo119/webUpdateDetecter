@@ -28,22 +28,45 @@ https://www.au-sonpo.co.jp/corporate/news/
 ## 未完了
 
 ### さくら損保
+https://www.sakura-ssi.co.jp/
+お知らせ：「//*[@id="home"]/div[2]/section[6]/div/ul/div/div/ul」
 
 ### ジェイアイ
+https://www.jihoken.co.jp/
+お知らせ：「//*[@id="top-info"]/ul」
 
 ### セコム損保
+https://www.secom-sonpo.co.jp/
+お知らせ：「//*[@id="public"]」
+商品・サービスのお知らせ：「//*[@id="commodity"]」
 
 ### 全管協れいわ損保
+https://www.zkreiwa-sonpo.co.jp/
+お知らせ：「//*[@id="post-98"]/div/div[2]/ul」
 
 ### ソニー損保
+https://from.sonysonpo.co.jp/topics/information/N0086000.html
+お知らせ：「//*[@id="content"]/table/tbody/tr/td[2]/table/tbody/tr/td[2]/div[2]/div」
+
+自然災害等により被害を受けられた皆様へ（ご連絡先、補償／保障、特別措置等のご案内）：「//*[@id="content"]/table/tbody/tr/td[2]/table/tbody/tr/td[2]/div[2]/ul[1]」
 
 ### SOMPOダイレクト
+https://www.sompo-direct.co.jp/
+お知らせ：「//*[@id="important"]/ul」
+ニュースリリース：「//*[@id="news"]/ul」
 
 ### 第一アイペット
+https://www.ipet-ins.com/info/
+お知らせ：「/html/body/main/div/div/div/ul」
 
 ### 大同火災
+https://www.daidokasai.co.jp/news/
+お知らせ：「//*[@id="top"]/main/section[2]/div/div/div/ul」
 
 ### 東京海上ダイレクト
+https://www.e-design.net/
+お知らせ：「/html/body/div[1]/main/article/section[9]/div/div/div[1]/div[2]」
+ニュースリリース：「/html/body/div[1]/main/article/section[9]/div/div/div[2]/div[2]」
 
 ### 東京海上日動
 
