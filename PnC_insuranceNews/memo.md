@@ -12,6 +12,11 @@ https://www.sonpo.or.jp/member/link/ev7otb0000000cwh-att/hensen.pdf
 - ドコモ損保（お知らせ）
 - キャピタル損保（お知らせ）
 - 共栄火災（お知らせ、XPathはdiv.news-top使用、※WindowsローカルのみSSL証明書エラー発生・Lambda環境では問題なし）
+- さくら損保（お知らせ）
+- ジェイアイ（お知らせ）
+- 全管協れいわ損保（お知らせ）
+- ソニー損保（お知らせ・自然災害等のお知らせ、XPathはclass-based）
+- SOMPOダイレクト（大切なお知らせ・ニュースリリース、メインサイトはJS動的→ニュースポータル news-ins-saison.dga.jp から取得）
 
 ## スキップ（JavaScript対応が必要）
 ### アクサ損保
