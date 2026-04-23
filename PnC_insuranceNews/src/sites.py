@@ -188,4 +188,32 @@ SITES = [
         "xpath": "//div[contains(@class,'newsContent')]",
         "extractor": "meijiyasuda",
     },
+    {
+        "name": "ペット＆ファミリー損保 お知らせ",
+        "url": "https://www.petfamilyins.co.jp/news/news_category/notice/",
+        "base_url": "https://www.petfamilyins.co.jp",
+        "xpath": "/html/body/main/section/div/div",
+        "extractor": "petfamily",
+    },
+    {
+        "name": "ヤマップネイチャランス お知らせ",
+        "url": "https://yamap-naturance.co.jp/news",
+        "base_url": "https://yamap-naturance.co.jp",
+        "xpath": '//*[@id="__nuxt"]/div/div/div[3]/div[2]/div/div[3]',
+        "extractor": "yamap_naturance",
+    },
+    {
+        "name": "楽天損保 お知らせ",
+        "url": "https://www.rakuten-sonpo.co.jp/news/tabid/85/Default.aspx",
+        "base_url": "https://www.rakuten-sonpo.co.jp",
+        "xpath": '//*[@id="dnn_ctr753_ViewAnnouncements_pnlAllArea"]/div/div',
+        "extractor": "rakuten_sonpo",
+    },
+    {
+        "name": "レスキュー損保 お知らせ",
+        "url": "https://www.rescue-sonpo.jp/news.php",
+        "base_url": "https://www.rescue-sonpo.jp",
+        "xpath": '//*[@id="top"]/div[2]/section/div/div/ul',
+        "extractor": "rescue_sonpo",
+    },
 ]

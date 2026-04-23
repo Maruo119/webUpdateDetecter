@@ -221,6 +221,22 @@ def extract_meijiyasuda(container: lxml_html.HtmlElement, base_url: str) -> list
     return _extract_generic(container, base_url)
 
 
+def extract_petfamily(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
+def extract_yamap_naturance(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
+def extract_rakuten_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
+def extract_rescue_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
 EXTRACTORS = {
     "aig": extract_aig,
     "sompo_japan": extract_sompo_japan,
@@ -245,4 +261,8 @@ EXTRACTORS = {
     "ms_ins": extract_ms_ins,
     "mitsui_direct": extract_mitsui_direct,
     "meijiyasuda": extract_meijiyasuda,
+    "petfamily": extract_petfamily,
+    "yamap_naturance": extract_yamap_naturance,
+    "rakuten_sonpo": extract_rakuten_sonpo,
+    "rescue_sonpo": extract_rescue_sonpo,
 }
