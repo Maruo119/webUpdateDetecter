@@ -107,17 +107,46 @@ def send_slack(site_name: str, new_articles: list[dict]) -> None:
     res.raise_for_status()
 
 
+def _lookup_prev_hrefs(site: dict, state: dict) -> list[str]:
+    """state から前回の hrefs を取得する。
+
+    新形式: state[site_name] = [href, ...]
+    旧形式（URL キー）からの後方互換：同じ URL を持つサイトが複数ある場合は
+    state キーの衝突により正しい差分検知ができないため、旧形式のエントリは
+    URL が SITES 内で一意である場合のみ初期値として使用する。
+    """
+    name = site["name"]
+    # 新形式を優先
+    if name in state:
+        return list(state.get(name, []))
+
+    # 旧形式（URL キー）からの移行：URL が SITES 内で一意なときのみ採用
+    url = resolve_site_url(site)
+    url_counts = sum(1 for s in SITES if resolve_site_url(s) == url)
+    if url_counts == 1 and url in state:
+        return list(state.get(url, []))
+
+    # 該当なし（初回扱い）
+    return []
+
+
 def check_site(site: dict, state: dict) -> list[str]:
     url = resolve_site_url(site)
     name = site["name"]
     try:
         articles = fetch_articles(site)
     except Exception as e:
-        print(f"[ERROR] fetch failed: {url} — {e}")
-        return state.get(url, [])
+        print(f"[ERROR] fetch failed: {name} ({url}) - {e}")
+        # 失敗時は前回の state を保つ（欠損させない）
+        return _lookup_prev_hrefs(site, state)
 
-    prev_hrefs: set[str] = set(state.get(url, []))
+    prev_hrefs: set[str] = set(_lookup_prev_hrefs(site, state))
     new_articles = [a for a in articles if a["href"] not in prev_hrefs]
+
+    print(
+        f"[INFO] {name}: extracted={len(articles)}, "
+        f"prev={len(prev_hrefs)}, new={len(new_articles)}"
+    )
 
     if new_articles and prev_hrefs:
         try:
@@ -133,9 +162,10 @@ def check_site(site: dict, state: dict) -> list[str]:
 
 def lambda_handler(event, context):
     state = load_state()
-    new_state = {}
+    new_state: dict[str, list[str]] = {}
     for site in SITES:
-        new_state[resolve_site_url(site)] = check_site(site, state)
+        # state のキーはサイト名（URL が重複するサイトでも衝突しない）
+        new_state[site["name"]] = check_site(site, state)
     save_state(new_state)
     return {"statusCode": 200, "body": "OK"}
 
