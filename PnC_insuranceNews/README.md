@@ -4,15 +4,52 @@
 
 ## 監視対象サイト
 
-| 会社 | URL | 監視箇所 |
-|------|-----|---------|
-| AIG損保 | https://www.aig.co.jp/sonpo/company/news | ニュース一覧（`ul.cmp-newslist`） |
-| 損保ジャパン | https://www.sompo-japan.co.jp/ | ニュースリリース・トピックス（トップページ内） |
-| あいおいニッセイ同和損保 | https://www.aioinissaydowa.co.jp/ | お知らせ・ニュースリリース（`section.p-top-spread`） |
-| アニコム損保 | https://www.anicom-sompo.co.jp/topics/{year}/ | トピックス（年度別URL） |
-| アニコム損保 | https://www.anicom-sompo.co.jp/news-release/{year}/ | ニュースリリース（年度別URL） |
+現在 **34社** を監視しています。詳細は以下を参照：
 
-追加予定の会社・スキップ済みサイト（アクサ損保など）は [memo.md](memo.md) を参照。
+| # | 会社 | URL | 監視内容 |
+|---|------|-----|---------|
+| 1 | AIG損保 | https://www.aig.co.jp/sonpo/company/news | ニュースリリース |
+| 2 | 損保ジャパン | https://www.sompo-japan.co.jp/ | ニュースリリース・トピックス |
+| 3 | あいおいニッセイ同和損保 | https://www.aioinissaydowa.co.jp/ | お知らせ・ニュースリリース |
+| 4 | アニコム損保 | https://www.anicom-sompo.co.jp/topics/{year}/ | トピックス（年度別URL） |
+| 5 | アニコム損保 | https://www.anicom-sompo.co.jp/news-release/{year}/ | ニュースリリース（年度別URL） |
+| 6 | エイチ･エス損保 | https://www.hs-sonpo.co.jp/ | お知らせ |
+| 7 | ＳＢＩ損保 | https://www.sbisonpo.co.jp/company/ | ニュースリリース |
+| 8 | ＳＢＩ損保 | https://www.sbisonpo.co.jp/company/ | お知らせ |
+| 9 | ドコモ損保 | https://www.docomo-sompo.com/news/ | お知らせ |
+| 10 | キャピタル損保 | https://www.capital-sonpo.co.jp/ | お知らせ |
+| 11 | 共栄火災 | https://www.kyoeikasai.co.jp/ | お知らせ |
+| 12 | さくら損保 | https://www.sakura-ssi.co.jp/ | お知らせ |
+| 13 | ジェイアイ | https://www.jihoken.co.jp/ | お知らせ |
+| 14 | 全管協れいわ損保 | https://www.zkreiwa-sonpo.co.jp/ | お知らせ |
+| 15 | ソニー損保 | https://from.sonysonpo.co.jp/topics/information/N0086000.html | お知らせ |
+| 16 | ソニー損保 | https://from.sonysonpo.co.jp/topics/information/N0086000.html | 自然災害等のお知らせ |
+| 17 | SOMPOダイレクト | https://news-ins-saison.dga.jp/topics/?type=important | 大切なお知らせ |
+| 18 | SOMPOダイレクト | https://news-ins-saison.dga.jp/topics/?type=news | ニュースリリース |
+| 19 | 第一アイペット | https://www.ipet-ins.com/info/ | お知らせ |
+| 20 | 大同火災 | https://www.daidokasai.co.jp/news/ | お知らせ |
+| 21 | 東京海上日動 | https://www.tokiomarine-nichido.co.jp/company/news/ | お知らせ |
+| 22 | トーア再保険 | https://www.toare.co.jp/ | お知らせ |
+| 23 | 日新火災 | https://www.nisshinfire.co.jp/news_release/ | ニュースリリース |
+| 24 | 日本地震再保険 | https://www.nihonjishin.co.jp/ | お知らせ |
+| 25 | 三井住友海上 | https://www.ms-ins.com/news/fy{year}/ | ニュースリリース（年度別URL） |
+| 26 | 三井ダイレクト損保 | https://news.mitsui-direct.co.jp/ | お知らせ・ニュースリリース |
+| 27 | 明治安田損保 | https://www.meijiyasuda-sonpo.co.jp/news/ | お知らせ |
+| 28 | ペット＆ファミリー損保 | https://www.petfamilyins.co.jp/news/news_category/notice/ | お知らせ |
+| 29 | ヤマップネイチャランス | https://yamap-naturance.co.jp/news | お知らせ |
+| 30 | 楽天損保 | https://www.rakuten-sonpo.co.jp/news/tabid/85/Default.aspx | お知らせ |
+| 31 | レスキュー損保 | https://www.rescue-sonpo.jp/news.php | お知らせ |
+
+## スキップ（JavaScript動的レンダリング対応が必要）
+
+以下の会社はJavaScriptで動的レンダリングされるため、本システムの対象外です。Playwright などの導入が必要です：
+
+- **アクサ損保** - https://www.axa-direct.co.jp/company/official_info/
+- **au損保** - https://www.au-sonpo.co.jp/corporate/news/
+- **セコム損保** - https://www.secom-sonpo.co.jp/
+- **東京海上ダイレクト** - https://www.e-design.net/
+
+詳細は [memo.md](memo.md) を参照。
 
 ### 新しい会社を追加する場合
 
