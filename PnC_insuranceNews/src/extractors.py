@@ -11,9 +11,11 @@ def resolve_url(href: str, base_url: str) -> str:
     return href
 
 
-def extract_aig(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+def extract_aig(container: lxml_html.HtmlElement, base_url: str, limit: int = 10) -> list[dict]:
     items = []
     for li in container.xpath('.//li[contains(@class,"cmp-newslist__item")]'):
+        if len(items) >= limit:
+            break
         a_els = li.xpath('.//a[contains(@class,"cmp-newslist__link")]')
         title_els = li.xpath('.//div[contains(@class,"cmp-newslist-item__title")]')
         if not a_els:
@@ -25,10 +27,12 @@ def extract_aig(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
     return items
 
 
-def extract_sompo_japan(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+def extract_sompo_japan(container: lxml_html.HtmlElement, base_url: str, limit: int = 10) -> list[dict]:
     items = []
     seen: set[str] = set()
     for a in container.xpath('.//a[@href]'):
+        if len(items) >= limit:
+            break
         href = resolve_url(a.get("href", "").strip(), base_url)
         title = a.text_content().strip()
         # ナビゲーションリンクを除外し、実際のニュース・PDF文書のみ対象にする
@@ -39,10 +43,12 @@ def extract_sompo_japan(container: lxml_html.HtmlElement, base_url: str) -> list
     return items
 
 
-def extract_aioi(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+def extract_aioi(container: lxml_html.HtmlElement, base_url: str, limit: int = 10) -> list[dict]:
     items = []
     seen: set[str] = set()
     for a in container.xpath('.//a[@href]'):
+        if len(items) >= limit:
+            break
         raw_href = a.get("href", "").strip()
         title = a.text_content().strip()
 
@@ -64,10 +70,12 @@ def extract_aioi(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
     return items
 
 
-def extract_anicom(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+def extract_anicom(container: lxml_html.HtmlElement, base_url: str, limit: int = 10) -> list[dict]:
     items = []
     seen: set[str] = set()
     for a in container.xpath('.//a[@href]'):
+        if len(items) >= limit:
+            break
         raw_href = a.get("href", "").strip()
         # タブ・改行を含む可能性があるためスペース正規化
         title = " ".join(a.text_content().split())
@@ -89,10 +97,13 @@ def extract_anicom(container: lxml_html.HtmlElement, base_url: str) -> list[dict
 
 def _extract_generic(container: lxml_html.HtmlElement, base_url: str,
                      skip_titles: tuple[str, ...] = (),
-                     skip_hrefs: tuple[str, ...] = ()) -> list[dict]:
+                     skip_hrefs: tuple[str, ...] = (),
+                     limit: int = 10) -> list[dict]:
     items = []
     seen: set[str] = set()
     for a in container.xpath('.//a[@href]'):
+        if len(items) >= limit:
+            break
         raw_href = a.get("href", "").strip()
         title = " ".join(a.text_content().split())
         if not title or not raw_href:
@@ -119,11 +130,13 @@ def extract_docomo_sompo(container: lxml_html.HtmlElement, base_url: str) -> lis
     return _extract_generic(container, base_url)
 
 
-def extract_capital_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+def extract_capital_sonpo(container: lxml_html.HtmlElement, base_url: str, limit: int = 10) -> list[dict]:
     items = []
     seen: set[str] = set()
     page_url = base_url.rstrip("/") + "/"
     for a in container.xpath('.//a[@href]'):
+        if len(items) >= limit:
+            break
         raw_href = a.get("href", "").strip()
         title = " ".join(a.text_content().split())
         if not title or not raw_href:
@@ -165,11 +178,13 @@ def extract_ipet(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
     return _extract_generic(container, base_url)
 
 
-def extract_daidokasai(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+def extract_daidokasai(container: lxml_html.HtmlElement, base_url: str, limit: int = 10) -> list[dict]:
     """大同火災: <a class="link"> 内の <span class="title"> からタイトルを抽出"""
     items = []
     seen: set[str] = set()
     for a in container.xpath('.//a[contains(@class,"link")][@href]'):
+        if len(items) >= limit:
+            break
         href = a.get("href", "").strip()
         title_els = a.xpath('.//span[@class="title"]')
         title = title_els[0].text_content().strip() if title_els else a.text_content().strip()
@@ -188,11 +203,13 @@ def extract_toare(container: lxml_html.HtmlElement, base_url: str) -> list[dict]
     return _extract_generic(container, base_url)
 
 
-def extract_nisshinfire(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+def extract_nisshinfire(container: lxml_html.HtmlElement, base_url: str, limit: int = 10) -> list[dict]:
     page_url = base_url.rstrip("/") + "/news_release/"
     items = []
     seen: set[str] = set()
     for a in container.xpath('.//a[@href]'):
+        if len(items) >= limit:
+            break
         raw_href = a.get("href", "").strip()
         title = " ".join(a.text_content().split())
         if not raw_href or not title:
@@ -258,6 +275,74 @@ EXTRACTORS = {
     "toare": extract_toare,
     "nisshinfire": extract_nisshinfire,
     "nihonjishin": extract_nihonjishin,
+    "ms_ins": extract_ms_ins,
+    "mitsui_direct": extract_mitsui_direct,
+    "meijiyasuda": extract_meijiyasuda,
+    "petfamily": extract_petfamily,
+    "yamap_naturance": extract_yamap_naturance,
+    "rakuten_sonpo": extract_rakuten_sonpo,
+    "rescue_sonpo": extract_rescue_sonpo,
+}
+
+
+def extract_ms_ins(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
+def extract_mitsui_direct(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
+def extract_meijiyasuda(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
+def extract_petfamily(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
+def extract_yamap_naturance(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
+def extract_rakuten_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
+def extract_rescue_sonpo(container: lxml_html.HtmlElement, base_url: str) -> list[dict]:
+    return _extract_generic(container, base_url)
+
+
+EXTRACTORS = {
+    "aig": extract_aig,
+    "sompo_japan": extract_sompo_japan,
+    "aioi": extract_aioi,
+    "anicom": extract_anicom,
+    "hs_sonpo": extract_hs_sonpo,
+    "sbi_sonpo": extract_sbi_sonpo,
+    "docomo_sompo": extract_docomo_sompo,
+    "capital_sonpo": extract_capital_sonpo,
+    "kyoei_kasai": extract_kyoei_kasai,
+    "sakura_sonpo": extract_sakura_sonpo,
+    "jihoken": extract_jihoken,
+    "zkreiwa_sonpo": extract_zkreiwa_sonpo,
+    "sony_sonpo": extract_sony_sonpo,
+    "sompo_direct": extract_sompo_direct,
+    "ipet": extract_ipet,
+    "daidokasai": extract_daidokasai,
+    "tokiomarine_nichido": extract_tokiomarine_nichido,
+    "toare": extract_toare,
+    "nisshinfire": extract_nisshinfire,
+    "nihonjishin": extract_nihonjishin,
+    "ms_ins": extract_ms_ins,
+    "mitsui_direct": extract_mitsui_direct,
+    "meijiyasuda": extract_meijiyasuda,
+    "petfamily": extract_petfamily,
+    "yamap_naturance": extract_yamap_naturance,
+    "rakuten_sonpo": extract_rakuten_sonpo,
+    "rescue_sonpo": extract_rescue_sonpo,
+}
+n,
     "ms_ins": extract_ms_ins,
     "mitsui_direct": extract_mitsui_direct,
     "meijiyasuda": extract_meijiyasuda,
