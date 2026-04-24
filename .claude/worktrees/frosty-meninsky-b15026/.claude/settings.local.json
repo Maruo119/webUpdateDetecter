@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.sompo-japan.co.jp)",
+      "Bash(aws s3 *)",
+      "Bash(aws events *)",
+      "Bash(gh pr create --title Slack通知をタイトルリンク1行形式に変更 --body ' *)",
+      "WebFetch(domain:www.aioinissaydowa.co.jp)",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "Bash(aws logs *)",
+      "Bash(git push *)",
+      "WebFetch(domain:www.axa-direct.co.jp)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(python test_refactor.py)",
+      "Bash(python \"D:/webUpdateDetecter/PnC_insuranceNews/src/test_refactor.py\")",
+      "Bash(python -c \"import lxml; print\\(lxml.__file__\\)\")",
+      "Bash(python \"D:/webUpdateDetecter/PnC_insuranceNews/test_refactor.py\")",
+      "Bash(gh pr create --title 'refactor: PnC_insuranceNews/lambda_function.py を3ファイルに分割' --body ' *)"
+    ]
+  }
+}
