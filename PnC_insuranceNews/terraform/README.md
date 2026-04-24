@@ -67,9 +67,9 @@ terraform apply -auto-approve -var="state_bucket_name=xxx" -var="slack_webhook_u
 terraform destroy -var="state_bucket_name=xxx" -var="slack_webhook_url=xxx"
 ```
 
-## S3の状態ファイル
+## S3 の状態ファイル
 
-`PnC_insuranceNews/state.json` のスキーマ。キーがURL、値がhrefの配列。
+`PnC_insuranceNews/state.json` のスキーマ。キーが URL、値が href の配列。
 
 ```json
 {

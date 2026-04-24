@@ -4,9 +4,9 @@
 
 ## 監視対象サイト
 
-| 対象 | URL | 監視箇所 |
+| 対象 | RSS フィード URL | 監視形式 |
 |------|-----|---------|
-| 金融庁 | https://www.fsa.go.jp/ | お知らせ一覧（`//*[@id='fsa_newslist_all']`） |
+| 金融庁 | https://www.fsa.go.jp/common/feed/rss/newsrelease.xml | RSS 2.0 |
 
 ## Slack通知仕様
 
@@ -21,9 +21,9 @@
 ## 動作の仕組み
 
 ```
-EventBridge (毎時) → Lambda → FSAをfetch
+EventBridge (毎時) → Lambda → RSSフィードをfetch
                                   ↓
-                             lxml XPathでコンテナ要素を特定
+                             XML パースで item 要素を解析
                                   ↓
                              extract_fsaでhref・タイトルを抽出
                                   ↓

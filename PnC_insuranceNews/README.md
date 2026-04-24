@@ -12,7 +12,7 @@
 | アニコム損保 | https://www.anicom-sompo.co.jp/topics/{year}/ | トピックス（年度別URL） |
 | アニコム損保 | https://www.anicom-sompo.co.jp/news-release/{year}/ | ニュースリリース（年度別URL） |
 
-追加予定の会社・スキップ済みサイト（アクサ損保など）は [terraform/memo.md](terraform/memo.md) を参照。
+追加予定の会社・スキップ済みサイト（アクサ損保など）は [memo.md](memo.md) を参照。
 
 ### 新しい会社を追加する場合
 

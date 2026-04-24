@@ -17,14 +17,23 @@ webUpdateDetecter/
 │   ├── requirements.txt
 │   ├── deploy.ps1
 │   ├── src/lambda_function.py
-│   └── terraform/
-└── PnC_insuranceNews/         # 損保会社ニュースリリース監視
+│   ├── terraform/
+│   └── debug/                 # デバッグスクリプト
+├── PnC_insuranceNews/         # 損保会社ニュースリリース監視
+│   ├── README.md
+│   ├── memo.md                # 追加予定・完了済み会社の管理メモ
+│   ├── requirements.txt
+│   ├── deploy.ps1
+│   ├── src/lambda_function.py
+│   ├── terraform/
+│   └── debug/                 # デバッグスクリプト
+└── FSA/                       # 金融庁お知らせ監視
     ├── README.md
     ├── requirements.txt
     ├── deploy.ps1
     ├── src/lambda_function.py
-    └── terraform/
-        └── memo.md            # 追加予定・完了済み会社の管理メモ
+    ├── terraform/
+    └── debug/                 # デバッグスクリプト
 ```
 
 ## 共通アーキテクチャ
@@ -50,7 +59,8 @@ webUpdateDetecter/
 1. ブラウザ DevTools で監視対象要素の XPath を調査する
 2. `SITES` リストにエントリを追加する（`extractor` キーで関数を指定）
 3. `EXTRACTORS` 辞書に対応する `extract_xxx()` 関数を実装する
-4. ローカルでデバッグ後、`deploy.ps1` でデプロイする
+4. `memo.md` に進捗を記録する
+5. ローカルでデバッグ後、`deploy.ps1` でデプロイする
 
 ```python
 # SITES エントリ例
@@ -75,6 +85,13 @@ def extract_new_company(container, base_url):
 EXTRACTORS["new_company"] = extract_new_company
 ```
 
+### FSA（RSS フィード使用）
+
+1. RSS URL をブラウザで確認する
+2. `SITES` リストに RSS URL を追加する
+3. `EXTRACTORS` 辞書に対応する `extract_xxx()` 関数を実装する（XML パース）
+4. ローカルでデバッグ後、`deploy.ps1` でデプロイする
+
 ## デプロイコマンド
 
 ### cycleLifeBlog
@@ -92,6 +109,15 @@ cd D:\webUpdateDetecter
 cd D:\webUpdateDetecter
 .\PnC_insuranceNews\deploy.ps1 `
   -StateBucketName "my-insurance-news-state" `
+  -SlackWebhookUrl "https://hooks.slack.com/services/..."
+```
+
+### FSA
+
+```powershell
+cd D:\webUpdateDetecter
+.\FSA\deploy.ps1 `
+  -StateBucketName "my-fsa-state" `
   -SlackWebhookUrl "https://hooks.slack.com/services/..."
 ```
 
@@ -135,6 +161,10 @@ aws s3 cp state_backup.json "s3://$bucket/$key"
 
 ## PnC_insuranceNews — 追加予定会社
 
-`PnC_insuranceNews/terraform/memo.md` を参照。
-完了済み: AIG損保、損保ジャパン、あいおいニッセイ同和損保、アニコム損保。
-スキップ: アクサ損保（JS動的レンダリング）。
+`PnC_insuranceNews/memo.md` を参照。
+完了済み: 34社以上（詳細は memo.md 参照）。
+スキップ: アクサ損保、au損保、セコム損保、東京海上ダイレクト（JavaScript 動的レンダリング）。
+
+## FSA — 実装状況
+
+`FSA/` ディレクトリを参照。金融庁お知らせ RSS フィード監視。
