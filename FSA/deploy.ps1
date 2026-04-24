@@ -43,7 +43,7 @@ $S3Key        = "FSA/state.json"
 $TmpResponse  = "$env:TEMP\lambda_response.json"
 
 Write-Host "`nInvoking Lambda..." -ForegroundColor Cyan
-aws lambda invoke --function-name $FunctionName $TmpResponse
+aws lambda invoke --function-name $FunctionName --log-type Tail $TmpResponse --query 'LogResult' --output text | base64 -d 2>/dev/null
 $response = Get-Content $TmpResponse | ConvertFrom-Json
 if ($response.statusCode -ne 200) {
     Write-Host "[FAIL] Lambda returned unexpected response:" -ForegroundColor Red
@@ -59,8 +59,8 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 $state = $stateJson | ConvertFrom-Json
-foreach ($url in ($state | Get-Member -MemberType NoteProperty).Name) {
-    $count = $state.$url.Count
-    Write-Host "  $url : $count 件" -ForegroundColor White
+foreach ($site_name in ($state | Get-Member -MemberType NoteProperty).Name) {
+    $count = $state.$site_name.Count
+    Write-Host "  $site_name : $count 件" -ForegroundColor White
 }
 Write-Host "[OK] S3 state verified." -ForegroundColor Green
