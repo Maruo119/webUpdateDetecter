@@ -1,10 +1,7 @@
-import datetime
 import json
 import os
-from urllib.parse import urlparse
 import boto3
 import requests
-from lxml import html as lxml_html
 
 from sites import SITES
 from extractors import EXTRACTORS
@@ -14,7 +11,6 @@ S3_BUCKET = os.environ.get("STATE_BUCKET", "")
 S3_KEY = "FSA/state.json"
 
 _s3 = None
-_SSL_SKIP_HOSTS = set()
 
 
 def s3_client():
@@ -24,7 +20,7 @@ def s3_client():
     return _s3
 
 
-def load_state() -> dict:
+def load_state():
     if not S3_BUCKET:
         path = "/tmp/FSA_state.json"
         if os.path.exists(path):
@@ -38,7 +34,7 @@ def load_state() -> dict:
         return {}
 
 
-def save_state(state: dict) -> None:
+def save_state(state):
     if not S3_BUCKET:
         with open("/tmp/FSA_state.json", "w") as f:
             json.dump(state, f, ensure_ascii=False)
@@ -51,7 +47,7 @@ def save_state(state: dict) -> None:
     )
 
 
-def fetch_html(url: str) -> lxml_html.HtmlElement:
+def fetch_rss(rss_url):
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -59,31 +55,20 @@ def fetch_html(url: str) -> lxml_html.HtmlElement:
             "Chrome/124.0.0.0 Safari/537.36"
         )
     }
-    verify = urlparse(url).hostname not in _SSL_SKIP_HOSTS
-    res = requests.get(url, headers=headers, timeout=30, verify=verify)
+    res = requests.get(rss_url, headers=headers, timeout=30)
     res.raise_for_status()
-    # HTTPデフォルトのISO-8859-1より chardet の検出結果を優先する（Shift-JIS・UTF-8対応）
     encoding = res.apparent_encoding or res.encoding or "utf-8"
-    html_text = res.content.decode(encoding, errors="replace")
-    return lxml_html.fromstring(html_text)
+    return res.content.decode(encoding, errors="replace")
 
 
-def resolve_site_url(site: dict) -> str:
-    template = site["url_template"] if "url_template" in site else site["url"]
-    return template.format(year=datetime.datetime.now().year)
+def fetch_articles(site):
+    rss_url = site["rss_url"]
+    rss_content = fetch_rss(rss_url)
+    extractor = EXTRACTORS[site.get("extractor", "fsa")]
+    return extractor(rss_content)
 
 
-def fetch_articles(site: dict) -> list[dict]:
-    url = resolve_site_url(site)
-    tree = fetch_html(url)
-    containers = tree.xpath(site["xpath"])
-    if not containers:
-        raise ValueError(f"XPath '{site['xpath']}' matched nothing on {url}")
-    extractor = EXTRACTORS[site["extractor"]]
-    return extractor(containers[0], site["base_url"])
-
-
-def send_slack(site_name: str, new_articles: list[dict]) -> None:
+def send_slack(site_name, new_articles):
     blocks = [
         {
             "type": "section",
@@ -107,40 +92,22 @@ def send_slack(site_name: str, new_articles: list[dict]) -> None:
     res.raise_for_status()
 
 
-def _lookup_prev_hrefs(site: dict, state: dict) -> list[str]:
-    """state から前回の hrefs を取得する。
-
-    新形式: state[site_name] = [href, ...]
-    旧形式（URL キー）からの後方互換：同じ URL を持つサイトが複数ある場合は
-    state キーの衝突により正しい差分検知ができないため、旧形式のエントリは
-    URL が SITES 内で一意である場合のみ初期値として使用する。
-    """
+def _lookup_prev_hrefs(site, state):
     name = site["name"]
-    # 新形式を優先
     if name in state:
         return list(state.get(name, []))
-
-    # 旧形式（URL キー）からの移行：URL が SITES 内で一意なときのみ採用
-    url = resolve_site_url(site)
-    url_counts = sum(1 for s in SITES if resolve_site_url(s) == url)
-    if url_counts == 1 and url in state:
-        return list(state.get(url, []))
-
-    # 該当なし（初回扱い）
     return []
 
 
-def check_site(site: dict, state: dict) -> list[str]:
-    url = resolve_site_url(site)
+def check_site(site, state):
     name = site["name"]
     try:
         articles = fetch_articles(site)
     except Exception as e:
-        print(f"[ERROR] fetch failed: {name} ({url}) - {e}")
-        # 失敗時は前回の state を保つ（欠損させない）
+        print(f"[ERROR] fetch failed: {name} - {e}")
         return _lookup_prev_hrefs(site, state)
 
-    prev_hrefs: set[str] = set(_lookup_prev_hrefs(site, state))
+    prev_hrefs = set(_lookup_prev_hrefs(site, state))
     new_articles = [a for a in articles if a["href"] not in prev_hrefs]
 
     print(
@@ -162,9 +129,8 @@ def check_site(site: dict, state: dict) -> list[str]:
 
 def lambda_handler(event, context):
     state = load_state()
-    new_state: dict[str, list[str]] = {}
+    new_state = {}
     for site in SITES:
-        # state のキーはサイト名（URL が重複するサイトでも衝突しない）
         new_state[site["name"]] = check_site(site, state)
     save_state(new_state)
     return {"statusCode": 200, "body": "OK"}

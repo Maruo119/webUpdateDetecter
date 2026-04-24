@@ -22,7 +22,7 @@ variable "slack_webhook_url" {
 }
 
 variable "schedule_expression" {
-  description = "EventBridge schedule expression (default: every hour)"
+  description = "EventBridge schedule expression (default: every hour at :00)"
   type        = string
-  default     = "rate(1 hour)"
+  default     = "cron(0 * * * ? *)"
 }

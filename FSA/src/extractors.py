@@ -1,47 +1,36 @@
-import re
-from urllib.parse import urljoin
-from lxml import html as lxml_html
+import xml.etree.ElementTree as ET
 
 
-def resolve_url(href, base_url):
-    if href.startswith("http"):
-        return href
-    if href.startswith("/"):
-        return base_url.rstrip("/") + href
-    return href
-
-
-def extract_fsa(container, base_url, limit=10):
+def extract_rss_items(rss_content, limit=10):
     items = []
-    seen = set()
+    try:
+        root = ET.fromstring(rss_content)
+    except ET.ParseError as e:
+        raise ValueError(f"Invalid RSS XML: {e}")
 
-    for li in container.xpath('.//li[@id]'):
+    for item_elem in root.findall('.//item'):
         if len(items) >= limit:
             break
 
-        a_elems = li.xpath('.//a[@href]')
-        if not a_elems:
+        title_elem = item_elem.find('title')
+        link_elem = item_elem.find('link')
+
+        if title_elem is None or link_elem is None:
             continue
 
-        a = a_elems[0]
-        raw_href = a.get("href", "").strip()
-        if not raw_href:
+        title = (title_elem.text or "").strip()
+        href = (link_elem.text or "").strip()
+
+        if not title or not href:
             continue
 
-        title = " ".join(a.text_content().split())
-        title = title.replace(" NEW", "").replace("NEW", "").strip()
-
-        if not title:
-            continue
-
-        href = resolve_url(raw_href, base_url)
-        if href in seen:
-            continue
-
-        seen.add(href)
         items.append({"href": href, "title": title})
 
     return items
+
+
+def extract_fsa(rss_content):
+    return extract_rss_items(rss_content, limit=10)
 
 
 EXTRACTORS = {
