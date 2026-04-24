@@ -43,7 +43,14 @@ $S3Key        = "FSA/state.json"
 $TmpResponse  = "$env:TEMP\lambda_response.json"
 
 Write-Host "`nInvoking Lambda..." -ForegroundColor Cyan
-aws lambda invoke --function-name $FunctionName --log-type Tail $TmpResponse --query 'LogResult' --output text | base64 -d 2>/dev/null
+$logResult = aws lambda invoke --function-name $FunctionName --log-type Tail $TmpResponse --query 'LogResult' --output text
+if ($logResult) {
+    try {
+        [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($logResult)) | Write-Host
+    } catch {
+        Write-Host "[Warning] Could not decode log result" -ForegroundColor Yellow
+    }
+}
 $response = Get-Content $TmpResponse | ConvertFrom-Json
 if ($response.statusCode -ne 200) {
     Write-Host "[FAIL] Lambda returned unexpected response:" -ForegroundColor Red
