@@ -342,12 +342,3 @@ EXTRACTORS = {
     "rakuten_sonpo": extract_rakuten_sonpo,
     "rescue_sonpo": extract_rescue_sonpo,
 }
-n,
-    "ms_ins": extract_ms_ins,
-    "mitsui_direct": extract_mitsui_direct,
-    "meijiyasuda": extract_meijiyasuda,
-    "petfamily": extract_petfamily,
-    "yamap_naturance": extract_yamap_naturance,
-    "rakuten_sonpo": extract_rakuten_sonpo,
-    "rescue_sonpo": extract_rescue_sonpo,
-}
