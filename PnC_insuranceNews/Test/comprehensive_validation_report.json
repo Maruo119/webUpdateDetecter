@@ -1,0 +1,449 @@
+{
+  "timestamp": "2026-04-24T02:07:36.168521",
+  "test_results": [
+    {
+      "site_name": "AIG損保 ニュースリリース",
+      "pattern": "pattern1",
+      "articles_found": 4,
+      "prev_hrefs_count": 3,
+      "new_articles_count": 1,
+      "new_articles": [
+        {
+          "href": "https://example.com/AIG損保/new1",
+          "title": "[新着] AIG損保 ニュースリリース 2025年4月のお知らせ"
+        }
+      ],
+      "slack_notified": true,
+      "state_before": {
+        "AIG損保 ニュースリリース": [
+          "https://example.com/AIG損保/item2",
+          "https://example.com/AIG損保/item3",
+          "https://example.com/AIG損保/item4"
+        ]
+      },
+      "state_after": {
+        "AIG損保 ニュースリリース": [
+          "https://example.com/AIG損保/new1",
+          "https://example.com/AIG損保/item2",
+          "https://example.com/AIG損保/item3",
+          "https://example.com/AIG損保/item4"
+        ]
+      }
+    },
+    {
+      "site_name": "AIG損保 ニュースリリース",
+      "pattern": "pattern2",
+      "articles_found": 4,
+      "prev_hrefs_count": 1,
+      "new_articles_count": 3,
+      "new_articles": [
+        {
+          "href": "https://example.com/AIG損保/new1",
+          "title": "[新着1号] AIG損保 ニュースリリース 2025年4月号"
+        },
+        {
+          "href": "https://example.com/AIG損保/new2",
+          "title": "[新着2号] AIG損保 ニュースリリース 2025年4月号"
+        },
+        {
+          "href": "https://example.com/AIG損保/new3",
+          "title": "[新着3号] AIG損保 ニュースリリース 2025年4月号"
+        }
+      ],
+      "slack_notified": true,
+      "state_before": {
+        "AIG損保 ニュースリリース": [
+          "https://example.com/AIG損保/item4"
+        ]
+      },
+      "state_after": {
+        "AIG損保 ニュースリリース": [
+          "https://example.com/AIG損保/new1",
+          "https://example.com/AIG損保/new2",
+          "https://example.com/AIG損保/new3",
+          "https://example.com/AIG損保/item4"
+        ]
+      }
+    },
+    {
+      "site_name": "損保ジャパン ニュースリリース",
+      "pattern": "pattern1",
+      "articles_found": 4,
+      "prev_hrefs_count": 3,
+      "new_articles_count": 1,
+      "new_articles": [
+        {
+          "href": "https://example.com/損保ジャパン/new1",
+          "title": "[新着] 損保ジャパン ニュースリリース 2025年4月のお知らせ"
+        }
+      ],
+      "slack_notified": true,
+      "state_before": {
+        "損保ジャパン ニュースリリース": [
+          "https://example.com/損保ジャパン/item2",
+          "https://example.com/損保ジャパン/item3",
+          "https://example.com/損保ジャパン/item4"
+        ]
+      },
+      "state_after": {
+        "損保ジャパン ニュースリリース": [
+          "https://example.com/損保ジャパン/new1",
+          "https://example.com/損保ジャパン/item2",
+          "https://example.com/損保ジャパン/item3",
+          "https://example.com/損保ジャパン/item4"
+        ]
+      }
+    },
+    {
+      "site_name": "損保ジャパン ニュースリリース",
+      "pattern": "pattern2",
+      "articles_found": 4,
+      "prev_hrefs_count": 1,
+      "new_articles_count": 3,
+      "new_articles": [
+        {
+          "href": "https://example.com/損保ジャパン/new1",
+          "title": "[新着1号] 損保ジャパン ニュースリリース 2025年4月号"
+        },
+        {
+          "href": "https://example.com/損保ジャパン/new2",
+          "title": "[新着2号] 損保ジャパン ニュースリリース 2025年4月号"
+        },
+        {
+          "href": "https://example.com/損保ジャパン/new3",
+          "title": "[新着3号] 損保ジャパン ニュースリリース 2025年4月号"
+        }
+      ],
+      "slack_notified": true,
+      "state_before": {
+        "損保ジャパン ニュースリリース": [
+          "https://example.com/損保ジャパン/item4"
+        ]
+      },
+      "state_after": {
+        "損保ジャパン ニュースリリース": [
+          "https://example.com/損保ジャパン/new1",
+          "https://example.com/損保ジャパン/new2",
+          "https://example.com/損保ジャパン/new3",
+          "https://example.com/損保ジャパン/item4"
+        ]
+      }
+    },
+    {
+      "site_name": "あいおいニッセイ同和損保 お知らせ・ニュースリリース",
+      "pattern": "pattern1",
+      "articles_found": 4,
+      "prev_hrefs_count": 3,
+      "new_articles_count": 1,
+      "new_articles": [
+        {
+          "href": "https://example.com/あいおいニッセイ同和損保/new1",
+          "title": "[新着] あいおいニッセイ同和損保 お知らせ・ニュースリリース 2025年4月のお知らせ"
+        }
+      ],
+      "slack_notified": true,
+      "state_before": {
+        "あいおいニッセイ同和損保 お知らせ・ニュースリリース": [
+          "https://example.com/あいおいニッセイ同和損保/item2",
+          "https://example.com/あいおいニッセイ同和損保/item3",
+          "https://example.com/あいおいニッセイ同和損保/item4"
+        ]
+      },
+      "state_after": {
+        "あいおいニッセイ同和損保 お知らせ・ニュースリリース": [
+          "https://example.com/あいおいニッセイ同和損保/new1",
+          "https://example.com/あいおいニッセイ同和損保/item2",
+          "https://example.com/あいおいニッセイ同和損保/item3",
+          "https://example.com/あいおいニッセイ同和損保/item4"
+        ]
+      }
+    },
+    {
+      "site_name": "あいおいニッセイ同和損保 お知らせ・ニュースリリース",
+      "pattern": "pattern2",
+      "articles_found": 4,
+      "prev_hrefs_count": 1,
+      "new_articles_count": 3,
+      "new_articles": [
+        {
+          "href": "https://example.com/あいおいニッセイ同和損保/new1",
+          "title": "[新着1号] あいおいニッセイ同和損保 お知らせ・ニュースリリース 2025年4月号"
+        },
+        {
+          "href": "https://example.com/あいおいニッセイ同和損保/new2",
+          "title": "[新着2号] あいおいニッセイ同和損保 お知らせ・ニュースリリース 2025年4月号"
+        },
+        {
+          "href": "https://example.com/あいおいニッセイ同和損保/new3",
+          "title": "[新着3号] あいおいニッセイ同和損保 お知らせ・ニュースリリース 2025年4月号"
+        }
+      ],
+      "slack_notified": true,
+      "state_before": {
+        "あいおいニッセイ同和損保 お知らせ・ニュースリリース": [
+          "https://example.com/あいおいニッセイ同和損保/item4"
+        ]
+      },
+      "state_after": {
+        "あいおいニッセイ同和損保 お知らせ・ニュースリリース": [
+          "https://example.com/あいおいニッセイ同和損保/new1",
+          "https://example.com/あいおいニッセイ同和損保/new2",
+          "https://example.com/あいおいニッセイ同和損保/new3",
+          "https://example.com/あいおいニッセイ同和損保/item4"
+        ]
+      }
+    },
+    {
+      "site_name": "エイチ･エス損保 お知らせ",
+      "pattern": "pattern1",
+      "articles_found": 4,
+      "prev_hrefs_count": 3,
+      "new_articles_count": 1,
+      "new_articles": [
+        {
+          "href": "https://example.com/エイチ･エス損保/new1",
+          "title": "[新着] エイチ･エス損保 お知らせ 2025年4月のお知らせ"
+        }
+      ],
+      "slack_notified": true,
+      "state_before": {
+        "エイチ･エス損保 お知らせ": [
+          "https://example.com/エイチ･エス損保/item2",
+          "https://example.com/エイチ･エス損保/item3",
+          "https://example.com/エイチ･エス損保/item4"
+        ]
+      },
+      "state_after": {
+        "エイチ･エス損保 お知らせ": [
+          "https://example.com/エイチ･エス損保/new1",
+          "https://example.com/エイチ･エス損保/item2",
+          "https://example.com/エイチ･エス損保/item3",
+          "https://example.com/エイチ･エス損保/item4"
+        ]
+      }
+    },
+    {
+      "site_name": "エイチ･エス損保 お知らせ",
+      "pattern": "pattern2",
+      "articles_found": 4,
+      "prev_hrefs_count": 1,
+      "new_articles_count": 3,
+      "new_articles": [
+        {
+          "href": "https://example.com/エイチ･エス損保/new1",
+          "title": "[新着1号] エイチ･エス損保 お知らせ 2025年4月号"
+        },
+        {
+          "href": "https://example.com/エイチ･エス損保/new2",
+          "title": "[新着2号] エイチ･エス損保 お知らせ 2025年4月号"
+        },
+        {
+          "href": "https://example.com/エイチ･エス損保/new3",
+          "title": "[新着3号] エイチ･エス損保 お知らせ 2025年4月号"
+        }
+      ],
+      "slack_notified": true,
+      "state_before": {
+        "エイチ･エス損保 お知らせ": [
+          "https://example.com/エイチ･エス損保/item4"
+        ]
+      },
+      "state_after": {
+        "エイチ･エス損保 お知らせ": [
+          "https://example.com/エイチ･エス損保/new1",
+          "https://example.com/エイチ･エス損保/new2",
+          "https://example.com/エイチ･エス損保/new3",
+          "https://example.com/エイチ･エス損保/item4"
+        ]
+      }
+    },
+    {
+      "site_name": "ＳＢＩ損保 ニュースリリース",
+      "pattern": "pattern1",
+      "articles_found": 4,
+      "prev_hrefs_count": 3,
+      "new_articles_count": 1,
+      "new_articles": [
+        {
+          "href": "https://example.com/ＳＢＩ損保/new1",
+          "title": "[新着] ＳＢＩ損保 ニュースリリース 2025年4月のお知らせ"
+        }
+      ],
+      "slack_notified": true,
+      "state_before": {
+        "ＳＢＩ損保 ニュースリリース": [
+          "https://example.com/ＳＢＩ損保/item2",
+          "https://example.com/ＳＢＩ損保/item3",
+          "https://example.com/ＳＢＩ損保/item4"
+        ]
+      },
+      "state_after": {
+        "ＳＢＩ損保 ニュースリリース": [
+          "https://example.com/ＳＢＩ損保/new1",
+          "https://example.com/ＳＢＩ損保/item2",
+          "https://example.com/ＳＢＩ損保/item3",
+          "https://example.com/ＳＢＩ損保/item4"
+        ]
+      }
+    },
+    {
+      "site_name": "ＳＢＩ損保 ニュースリリース",
+      "pattern": "pattern2",
+      "articles_found": 4,
+      "prev_hrefs_count": 1,
+      "new_articles_count": 3,
+      "new_articles": [
+        {
+          "href": "https://example.com/ＳＢＩ損保/new1",
+          "title": "[新着1号] ＳＢＩ損保 ニュースリリース 2025年4月号"
+        },
+        {
+          "href": "https://example.com/ＳＢＩ損保/new2",
+          "title": "[新着2号] ＳＢＩ損保 ニュースリリース 2025年4月号"
+        },
+        {
+          "href": "https://example.com/ＳＢＩ損保/new3",
+          "title": "[新着3号] ＳＢＩ損保 ニュースリリース 2025年4月号"
+        }
+      ],
+      "slack_notified": true,
+      "state_before": {
+        "ＳＢＩ損保 ニュースリリース": [
+          "https://example.com/ＳＢＩ損保/item4"
+        ]
+      },
+      "state_after": {
+        "ＳＢＩ損保 ニュースリリース": [
+          "https://example.com/ＳＢＩ損保/new1",
+          "https://example.com/ＳＢＩ損保/new2",
+          "https://example.com/ＳＢＩ損保/new3",
+          "https://example.com/ＳＢＩ損保/item4"
+        ]
+      }
+    },
+    {
+      "site_name": "ドコモ損保 お知らせ",
+      "pattern": "pattern1",
+      "articles_found": 4,
+      "prev_hrefs_count": 3,
+      "new_articles_count": 1,
+      "new_articles": [
+        {
+          "href": "https://example.com/ドコモ損保/new1",
+          "title": "[新着] ドコモ損保 お知らせ 2025年4月のお知らせ"
+        }
+      ],
+      "slack_notified": true,
+      "state_before": {
+        "ドコモ損保 お知らせ": [
+          "https://example.com/ドコモ損保/item2",
+          "https://example.com/ドコモ損保/item3",
+          "https://example.com/ドコモ損保/item4"
+        ]
+      },
+      "state_after": {
+        "ドコモ損保 お知らせ": [
+          "https://example.com/ドコモ損保/new1",
+          "https://example.com/ドコモ損保/item2",
+          "https://example.com/ドコモ損保/item3",
+          "https://example.com/ドコモ損保/item4"
+        ]
+      }
+    },
+    {
+      "site_name": "ドコモ損保 お知らせ",
+      "pattern": "pattern2",
+      "articles_found": 4,
+      "prev_hrefs_count": 1,
+      "new_articles_count": 3,
+      "new_articles": [
+        {
+          "href": "https://example.com/ドコモ損保/new1",
+          "title": "[新着1号] ドコモ損保 お知らせ 2025年4月号"
+        },
+        {
+          "href": "https://example.com/ドコモ損保/new2",
+          "title": "[新着2号] ドコモ損保 お知らせ 2025年4月号"
+        },
+        {
+          "href": "https://example.com/ドコモ損保/new3",
+          "title": "[新着3号] ドコモ損保 お知らせ 2025年4月号"
+        }
+      ],
+      "slack_notified": true,
+      "state_before": {
+        "ドコモ損保 お知らせ": [
+          "https://example.com/ドコモ損保/item4"
+        ]
+      },
+      "state_after": {
+        "ドコモ損保 お知らせ": [
+          "https://example.com/ドコモ損保/new1",
+          "https://example.com/ドコモ損保/new2",
+          "https://example.com/ドコモ損保/new3",
+          "https://example.com/ドコモ損保/item4"
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "total_tests": 12,
+    "passed": 12,
+    "failed": 0
+  },
+  "logs": [
+    "[2026-04-24 02:07:36] [INFO] ================================================================================",
+    "[2026-04-24 02:07:36] [INFO] PnC_insuranceNews 複数会社検証テスト開始",
+    "[2026-04-24 02:07:36] [INFO] ================================================================================\n",
+    "[2026-04-24 02:07:36] [INFO] \n【会社: AIG損保 ニュースリリース】",
+    "[2026-04-24 02:07:36] [INFO] Testing: AIG損保 ニュースリリース - Pattern: pattern1",
+    "[2026-04-24 02:07:36] [INFO]   取得記事: 4, 前回: 3, 差分: 1, Slack: ✓",
+    "[2026-04-24 02:07:36] [INFO] Testing: AIG損保 ニュースリリース - Pattern: pattern2",
+    "[2026-04-24 02:07:36] [INFO]   取得記事: 4, 前回: 1, 差分: 3, Slack: ✓",
+    "[2026-04-24 02:07:36] [INFO] \n【会社: 損保ジャパン ニュースリリース】",
+    "[2026-04-24 02:07:36] [INFO] Testing: 損保ジャパン ニュースリリース - Pattern: pattern1",
+    "[2026-04-24 02:07:36] [INFO]   取得記事: 4, 前回: 3, 差分: 1, Slack: ✓",
+    "[2026-04-24 02:07:36] [INFO] Testing: 損保ジャパン ニュースリリース - Pattern: pattern2",
+    "[2026-04-24 02:07:36] [INFO]   取得記事: 4, 前回: 1, 差分: 3, Slack: ✓",
+    "[2026-04-24 02:07:36] [INFO] \n【会社: あいおいニッセイ同和損保 お知らせ・ニュースリリース】",
+    "[2026-04-24 02:07:36] [INFO] Testing: あいおいニッセイ同和損保 お知らせ・ニュースリリース - Pattern: pattern1",
+    "[2026-04-24 02:07:36] [INFO]   取得記事: 4, 前回: 3, 差分: 1, Slack: ✓",
+    "[2026-04-24 02:07:36] [INFO] Testing: あいおいニッセイ同和損保 お知らせ・ニュースリリース - Pattern: pattern2",
+    "[2026-04-24 02:07:36] [INFO]   取得記事: 4, 前回: 1, 差分: 3, Slack: ✓",
+    "[2026-04-24 02:07:36] [INFO] \n【会社: エイチ･エス損保 お知らせ】",
+    "[2026-04-24 02:07:36] [INFO] Testing: エイチ･エス損保 お知らせ - Pattern: pattern1",
+    "[2026-04-24 02:07:36] [INFO]   取得記事: 4, 前回: 3, 差分: 1, Slack: ✓",
+    "[2026-04-24 02:07:36] [INFO] Testing: エイチ･エス損保 お知らせ - Pattern: pattern2",
+    "[2026-04-24 02:07:36] [INFO]   取得記事: 4, 前回: 1, 差分: 3, Slack: ✓",
+    "[2026-04-24 02:07:36] [INFO] \n【会社: ＳＢＩ損保 ニュースリリース】",
+    "[2026-04-24 02:07:36] [INFO] Testing: ＳＢＩ損保 ニュースリリース - Pattern: pattern1",
+    "[2026-04-24 02:07:36] [INFO]   取得記事: 4, 前回: 3, 差分: 1, Slack: ✓",
+    "[2026-04-24 02:07:36] [INFO] Testing: ＳＢＩ損保 ニュースリリース - Pattern: pattern2",
+    "[2026-04-24 02:07:36] [INFO]   取得記事: 4, 前回: 1, 差分: 3, Slack: ✓",
+    "[2026-04-24 02:07:36] [INFO] \n【会社: ドコモ損保 お知らせ】",
+    "[2026-04-24 02:07:36] [INFO] Testing: ドコモ損保 お知らせ - Pattern: pattern1",
+    "[2026-04-24 02:07:36] [INFO]   取得記事: 4, 前回: 3, 差分: 1, Slack: ✓",
+    "[2026-04-24 02:07:36] [INFO] Testing: ドコモ損保 お知らせ - Pattern: pattern2",
+    "[2026-04-24 02:07:36] [INFO]   取得記事: 4, 前回: 1, 差分: 3, Slack: ✓",
+    "[2026-04-24 02:07:36] [INFO] ",
+    "[2026-04-24 02:07:36] [INFO] \n================================================================================",
+    "[2026-04-24 02:07:36] [INFO] 【総合検証結果】",
+    "[2026-04-24 02:07:36] [INFO] ================================================================================\n",
+    "[2026-04-24 02:07:36] [INFO] ✓ PASS | AIG損保 ニュースリリース                      | pattern1   | 差分:1/1 | 通知:True",
+    "[2026-04-24 02:07:36] [INFO] ✓ PASS | AIG損保 ニュースリリース                      | pattern2   | 差分:3/3 | 通知:True",
+    "[2026-04-24 02:07:36] [INFO] ✓ PASS | 損保ジャパン ニュースリリース                     | pattern1   | 差分:1/1 | 通知:True",
+    "[2026-04-24 02:07:36] [INFO] ✓ PASS | 損保ジャパン ニュースリリース                     | pattern2   | 差分:3/3 | 通知:True",
+    "[2026-04-24 02:07:36] [INFO] ✓ PASS | あいおいニッセイ同和損保 お知らせ・ニュースリリース          | pattern1   | 差分:1/1 | 通知:True",
+    "[2026-04-24 02:07:36] [INFO] ✓ PASS | あいおいニッセイ同和損保 お知らせ・ニュースリリース          | pattern2   | 差分:3/3 | 通知:True",
+    "[2026-04-24 02:07:36] [INFO] ✓ PASS | エイチ･エス損保 お知らせ                       | pattern1   | 差分:1/1 | 通知:True",
+    "[2026-04-24 02:07:36] [INFO] ✓ PASS | エイチ･エス損保 お知らせ                       | pattern2   | 差分:3/3 | 通知:True",
+    "[2026-04-24 02:07:36] [INFO] ✓ PASS | ＳＢＩ損保 ニュースリリース                      | pattern1   | 差分:1/1 | 通知:True",
+    "[2026-04-24 02:07:36] [INFO] ✓ PASS | ＳＢＩ損保 ニュースリリース                      | pattern2   | 差分:3/3 | 通知:True",
+    "[2026-04-24 02:07:36] [INFO] ✓ PASS | ドコモ損保 お知らせ                          | pattern1   | 差分:1/1 | 通知:True",
+    "[2026-04-24 02:07:36] [INFO] ✓ PASS | ドコモ損保 お知らせ                          | pattern2   | 差分:3/3 | 通知:True",
+    "[2026-04-24 02:07:36] [INFO] \n--------------------------------------------------------------------------------",
+    "[2026-04-24 02:07:36] [INFO] 総テスト数: 12, 成功: 12, 失敗: 0",
+    "[2026-04-24 02:07:36] [INFO] --------------------------------------------------------------------------------\n",
+    "[2026-04-24 02:07:36] [INFO] ✅ ALL TESTS PASSED"
+  ]
+}

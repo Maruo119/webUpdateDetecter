@@ -1,0 +1,143 @@
+{
+  "timestamp": "2026-04-24T02:01:52.616620",
+  "test_results": [
+    {
+      "pattern": "pattern1_1item",
+      "state_before": {
+        "AIG損保 ニュースリリース": [
+          "https://www.aig.co.jp/sonpo/company/news/2025/04/item2",
+          "https://www.aig.co.jp/sonpo/company/news/2025/03/item3",
+          "https://www.aig.co.jp/sonpo/company/news/2025/02/item4"
+        ]
+      },
+      "articles_found": 4,
+      "new_articles": [
+        {
+          "href": "https://www.aig.co.jp/sonpo/company/news/2025/04/item1",
+          "title": "[新着] 2025年4月の新しいお知らせ - パターン1検証"
+        }
+      ],
+      "new_articles_count": 1,
+      "prev_hrefs_count": 3,
+      "state_after": {
+        "AIG損保 ニュースリリース": [
+          "https://www.aig.co.jp/sonpo/company/news/2025/04/item1",
+          "https://www.aig.co.jp/sonpo/company/news/2025/04/item2",
+          "https://www.aig.co.jp/sonpo/company/news/2025/03/item3",
+          "https://www.aig.co.jp/sonpo/company/news/2025/02/item4"
+        ]
+      },
+      "slack_notified": true,
+      "logs": [
+        "[2026-04-24 02:01:52] [INFO] === Testing Pattern: pattern1_1item ===",
+        "[2026-04-24 02:01:52] [INFO] State before: {\"AIG損保 ニュースリリース\": [\"https://www.aig.co.jp/sonpo/company/news/2025/04/item2\", \"https://www.aig.co.jp/sonpo/company/news/2025/03/item3\", \"https://www.aig.co.jp/sonpo/company/news/2025/02/item4\"]}",
+        "[2026-04-24 02:01:52] [INFO] Articles found from website: 4 items",
+        "[2026-04-24 02:01:52] [INFO] Previous hrefs: 3 items",
+        "[2026-04-24 02:01:52] [INFO] New articles detected: 1 items",
+        "[2026-04-24 02:01:52] [INFO]   New[1] [新着] 2025年4月の新しいお知らせ - パターン1検証",
+        "[2026-04-24 02:01:52] [INFO]     → https://www.aig.co.jp/sonpo/company/news/2025/04/item1",
+        "[2026-04-24 02:01:52] [INFO] ✓ Slack notification WILL BE SENT (new articles > 0 AND prev_hrefs > 0)",
+        "[2026-04-24 02:01:52] [INFO] State after: {\"AIG損保 ニュースリリース\": [\"https://www.aig.co.jp/sonpo/company/news/2025/04/item1\", \"https://www.aig.co.jp/sonpo/company/news/2025/04/item2\", \"https://www.aig.co.jp/sonpo/company/news/2025/03/item3\", \"https://www.aig.co.jp/sonpo/company/news/2025/02/item4\"]}"
+      ]
+    },
+    {
+      "pattern": "pattern2_3items",
+      "state_before": {
+        "AIG損保 ニュースリリース": [
+          "https://www.aig.co.jp/sonpo/company/news/2025/02/item4"
+        ]
+      },
+      "articles_found": 4,
+      "new_articles": [
+        {
+          "href": "https://www.aig.co.jp/sonpo/company/news/2025/04/new1",
+          "title": "[新着1] 2025年4月第1号 - パターン2検証"
+        },
+        {
+          "href": "https://www.aig.co.jp/sonpo/company/news/2025/04/new2",
+          "title": "[新着2] 2025年4月第2号 - パターン2検証"
+        },
+        {
+          "href": "https://www.aig.co.jp/sonpo/company/news/2025/04/new3",
+          "title": "[新着3] 2025年4月第3号 - パターン2検証"
+        }
+      ],
+      "new_articles_count": 3,
+      "prev_hrefs_count": 1,
+      "state_after": {
+        "AIG損保 ニュースリリース": [
+          "https://www.aig.co.jp/sonpo/company/news/2025/04/new1",
+          "https://www.aig.co.jp/sonpo/company/news/2025/04/new2",
+          "https://www.aig.co.jp/sonpo/company/news/2025/04/new3",
+          "https://www.aig.co.jp/sonpo/company/news/2025/02/item4"
+        ]
+      },
+      "slack_notified": true,
+      "logs": [
+        "[2026-04-24 02:01:52] [INFO] === Testing Pattern: pattern1_1item ===",
+        "[2026-04-24 02:01:52] [INFO] State before: {\"AIG損保 ニュースリリース\": [\"https://www.aig.co.jp/sonpo/company/news/2025/04/item2\", \"https://www.aig.co.jp/sonpo/company/news/2025/03/item3\", \"https://www.aig.co.jp/sonpo/company/news/2025/02/item4\"]}",
+        "[2026-04-24 02:01:52] [INFO] Articles found from website: 4 items",
+        "[2026-04-24 02:01:52] [INFO] Previous hrefs: 3 items",
+        "[2026-04-24 02:01:52] [INFO] New articles detected: 1 items",
+        "[2026-04-24 02:01:52] [INFO]   New[1] [新着] 2025年4月の新しいお知らせ - パターン1検証",
+        "[2026-04-24 02:01:52] [INFO]     → https://www.aig.co.jp/sonpo/company/news/2025/04/item1",
+        "[2026-04-24 02:01:52] [INFO] ✓ Slack notification WILL BE SENT (new articles > 0 AND prev_hrefs > 0)",
+        "[2026-04-24 02:01:52] [INFO] State after: {\"AIG損保 ニュースリリース\": [\"https://www.aig.co.jp/sonpo/company/news/2025/04/item1\", \"https://www.aig.co.jp/sonpo/company/news/2025/04/item2\", \"https://www.aig.co.jp/sonpo/company/news/2025/03/item3\", \"https://www.aig.co.jp/sonpo/company/news/2025/02/item4\"]}",
+        "[2026-04-24 02:01:52] [INFO] === Testing Pattern: pattern2_3items ===",
+        "[2026-04-24 02:01:52] [INFO] State before: {\"AIG損保 ニュースリリース\": [\"https://www.aig.co.jp/sonpo/company/news/2025/02/item4\"]}",
+        "[2026-04-24 02:01:52] [INFO] Articles found from website: 4 items",
+        "[2026-04-24 02:01:52] [INFO] Previous hrefs: 1 items",
+        "[2026-04-24 02:01:52] [INFO] New articles detected: 3 items",
+        "[2026-04-24 02:01:52] [INFO]   New[1] [新着1] 2025年4月第1号 - パターン2検証",
+        "[2026-04-24 02:01:52] [INFO]     → https://www.aig.co.jp/sonpo/company/news/2025/04/new1",
+        "[2026-04-24 02:01:52] [INFO]   New[2] [新着2] 2025年4月第2号 - パターン2検証",
+        "[2026-04-24 02:01:52] [INFO]     → https://www.aig.co.jp/sonpo/company/news/2025/04/new2",
+        "[2026-04-24 02:01:52] [INFO]   New[3] [新着3] 2025年4月第3号 - パターン2検証",
+        "[2026-04-24 02:01:52] [INFO]     → https://www.aig.co.jp/sonpo/company/news/2025/04/new3",
+        "[2026-04-24 02:01:52] [INFO] ✓ Slack notification WILL BE SENT (new articles > 0 AND prev_hrefs > 0)",
+        "[2026-04-24 02:01:52] [INFO] State after: {\"AIG損保 ニュースリリース\": [\"https://www.aig.co.jp/sonpo/company/news/2025/04/new1\", \"https://www.aig.co.jp/sonpo/company/news/2025/04/new2\", \"https://www.aig.co.jp/sonpo/company/news/2025/04/new3\", \"https://www.aig.co.jp/sonpo/company/news/2025/02/item4\"]}"
+      ]
+    }
+  ],
+  "logs": [
+    "[2026-04-24 02:01:52] [INFO] === Testing Pattern: pattern1_1item ===",
+    "[2026-04-24 02:01:52] [INFO] State before: {\"AIG損保 ニュースリリース\": [\"https://www.aig.co.jp/sonpo/company/news/2025/04/item2\", \"https://www.aig.co.jp/sonpo/company/news/2025/03/item3\", \"https://www.aig.co.jp/sonpo/company/news/2025/02/item4\"]}",
+    "[2026-04-24 02:01:52] [INFO] Articles found from website: 4 items",
+    "[2026-04-24 02:01:52] [INFO] Previous hrefs: 3 items",
+    "[2026-04-24 02:01:52] [INFO] New articles detected: 1 items",
+    "[2026-04-24 02:01:52] [INFO]   New[1] [新着] 2025年4月の新しいお知らせ - パターン1検証",
+    "[2026-04-24 02:01:52] [INFO]     → https://www.aig.co.jp/sonpo/company/news/2025/04/item1",
+    "[2026-04-24 02:01:52] [INFO] ✓ Slack notification WILL BE SENT (new articles > 0 AND prev_hrefs > 0)",
+    "[2026-04-24 02:01:52] [INFO] State after: {\"AIG損保 ニュースリリース\": [\"https://www.aig.co.jp/sonpo/company/news/2025/04/item1\", \"https://www.aig.co.jp/sonpo/company/news/2025/04/item2\", \"https://www.aig.co.jp/sonpo/company/news/2025/03/item3\", \"https://www.aig.co.jp/sonpo/company/news/2025/02/item4\"]}",
+    "[2026-04-24 02:01:52] [INFO] === Testing Pattern: pattern2_3items ===",
+    "[2026-04-24 02:01:52] [INFO] State before: {\"AIG損保 ニュースリリース\": [\"https://www.aig.co.jp/sonpo/company/news/2025/02/item4\"]}",
+    "[2026-04-24 02:01:52] [INFO] Articles found from website: 4 items",
+    "[2026-04-24 02:01:52] [INFO] Previous hrefs: 1 items",
+    "[2026-04-24 02:01:52] [INFO] New articles detected: 3 items",
+    "[2026-04-24 02:01:52] [INFO]   New[1] [新着1] 2025年4月第1号 - パターン2検証",
+    "[2026-04-24 02:01:52] [INFO]     → https://www.aig.co.jp/sonpo/company/news/2025/04/new1",
+    "[2026-04-24 02:01:52] [INFO]   New[2] [新着2] 2025年4月第2号 - パターン2検証",
+    "[2026-04-24 02:01:52] [INFO]     → https://www.aig.co.jp/sonpo/company/news/2025/04/new2",
+    "[2026-04-24 02:01:52] [INFO]   New[3] [新着3] 2025年4月第3号 - パターン2検証",
+    "[2026-04-24 02:01:52] [INFO]     → https://www.aig.co.jp/sonpo/company/news/2025/04/new3",
+    "[2026-04-24 02:01:52] [INFO] ✓ Slack notification WILL BE SENT (new articles > 0 AND prev_hrefs > 0)",
+    "[2026-04-24 02:01:52] [INFO] State after: {\"AIG損保 ニュースリリース\": [\"https://www.aig.co.jp/sonpo/company/news/2025/04/new1\", \"https://www.aig.co.jp/sonpo/company/news/2025/04/new2\", \"https://www.aig.co.jp/sonpo/company/news/2025/04/new3\", \"https://www.aig.co.jp/sonpo/company/news/2025/02/item4\"]}",
+    "[2026-04-24 02:01:52] [INFO] \n=== VERIFICATION SUMMARY ===\n",
+    "[2026-04-24 02:01:52] [INFO] \n【テストケース 1】pattern1_1item",
+    "[2026-04-24 02:01:52] [INFO]   取得記事数: 4 items",
+    "[2026-04-24 02:01:52] [INFO]   前回の記事数: 3 items",
+    "[2026-04-24 02:01:52] [INFO]   新着記事数: 1 items",
+    "[2026-04-24 02:01:52] [INFO]   Slack 通知予定: ✓ YES",
+    "[2026-04-24 02:01:52] [INFO]   期待値: 1 件の新着 → ✓ PASS",
+    "[2026-04-24 02:01:52] [INFO]   Slack 通知: ✓ CORRECT (新着あり + 前回の記録あり)",
+    "[2026-04-24 02:01:52] [INFO] \n【テストケース 2】pattern2_3items",
+    "[2026-04-24 02:01:52] [INFO]   取得記事数: 4 items",
+    "[2026-04-24 02:01:52] [INFO]   前回の記事数: 1 items",
+    "[2026-04-24 02:01:52] [INFO]   新着記事数: 3 items",
+    "[2026-04-24 02:01:52] [INFO]   Slack 通知予定: ✓ YES",
+    "[2026-04-24 02:01:52] [INFO]   期待値: 3 件の新着 → ✓ PASS",
+    "[2026-04-24 02:01:52] [INFO]   Slack 通知: ✓ CORRECT (新着あり + 前回の記録あり)",
+    "[2026-04-24 02:01:52] [INFO] \n=== OVERALL RESULT ===",
+    "[2026-04-24 02:01:52] [INFO] ✓ ALL TESTS PASSED"
+  ]
+}

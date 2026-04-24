@@ -1,0 +1,87 @@
+{
+  "timestamp": "2026-04-24T02:02:21.762456",
+  "pattern1": {
+    "description": "差分1件検出時の Slack メッセージ",
+    "articles_count": 1,
+    "articles": [
+      {
+        "href": "https://www.aig.co.jp/sonpo/company/news/2025/04/item1",
+        "title": "[新着] 2025年4月の新しいお知らせ - パターン1検証"
+      }
+    ],
+    "slack_payload": {
+      "blocks": [
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": ":newspaper: *AIG損保 ニュースリリース* に新しいお知らせが掲載されました！"
+          }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "<https://www.aig.co.jp/sonpo/company/news/2025/04/item1|[新着] 2025年4月の新しいお知らせ - パターン1検証>"
+          }
+        }
+      ]
+    }
+  },
+  "pattern2": {
+    "description": "差分3件検出時の Slack メッセージ",
+    "articles_count": 3,
+    "articles": [
+      {
+        "href": "https://www.aig.co.jp/sonpo/company/news/2025/04/new1",
+        "title": "[新着1] 2025年4月第1号 - パターン2検証"
+      },
+      {
+        "href": "https://www.aig.co.jp/sonpo/company/news/2025/04/new2",
+        "title": "[新着2] 2025年4月第2号 - パターン2検証"
+      },
+      {
+        "href": "https://www.aig.co.jp/sonpo/company/news/2025/04/new3",
+        "title": "[新着3] 2025年4月第3号 - パターン2検証"
+      }
+    ],
+    "slack_payload": {
+      "blocks": [
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": ":newspaper: *AIG損保 ニュースリリース* に新しいお知らせが掲載されました！"
+          }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "<https://www.aig.co.jp/sonpo/company/news/2025/04/new1|[新着1] 2025年4月第1号 - パターン2検証>"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "<https://www.aig.co.jp/sonpo/company/news/2025/04/new2|[新着2] 2025年4月第2号 - パターン2検証>"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "<https://www.aig.co.jp/sonpo/company/news/2025/04/new3|[新着3] 2025年4月第3号 - パターン2検証>"
+          }
+        }
+      ]
+    }
+  }
+}
