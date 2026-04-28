@@ -137,8 +137,17 @@ if (-not (Test-Path "terraform")) {
 }
 
 # Copy Terraform files
-Copy-Item "main.tf" "terraform\" -Force 2>&1 | Out-Null || Write-Host "⚠ main.tf not found (will be created)"
-Copy-Item "variables.tf" "terraform\" -Force 2>&1 | Out-Null || Write-Host "⚠ variables.tf not found (will be created)"
+if (Test-Path "main.tf") {
+    Copy-Item "main.tf" "terraform\" -Force
+} else {
+    Write-Host "⚠ main.tf not found (will be created)" -ForegroundColor Yellow
+}
+
+if (Test-Path "variables.tf") {
+    Copy-Item "variables.tf" "terraform\" -Force
+} else {
+    Write-Host "⚠ variables.tf not found (will be created)" -ForegroundColor Yellow
+}
 
 # Prepare terraform.tfvars
 $tfvarsPath = "terraform\terraform.tfvars"
@@ -212,5 +221,4 @@ catch {
 Write-Header "Deployment complete!"
 Write-Host "Next steps:" -ForegroundColor Green
 Write-Host "  1. View logs: aws logs tail /aws/lambda/j-platpat-checker --follow"
-Write-Host "  2. Manual test: aws lambda invoke --function-name j-platpat-checker response.json"
-Write-Host "  3. Monitor: aws events describe-rule --name j-platpat-checker-schedule"
+Write-Host "  2. Manual test: aws lambda invoke --function-name j-platpat-c
