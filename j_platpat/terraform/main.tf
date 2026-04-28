@@ -75,18 +75,26 @@ resource "aws_iam_role_policy" "lambda_s3" {
   })
 }
 
-# Lambda 関数
+# ECR Repository for Lambda container image
+resource "aws_ecr_repository" "j_platpat" {
+  name                 = "j-platpat-checker"
+  image_tag_mutability = "MUTABLE"
+  force_delete         = true
+
+  image_scanning_configuration {
+    scan_on_push = false
+  }
+}
+
+# Lambda 関数（コンテナイメージ使用）
 resource "aws_lambda_function" "j_platpat_checker" {
   function_name = "j-platpat-checker"
   role          = aws_iam_role.lambda_role.arn
-  handler       = "lambda_function.lambda_handler_sync"
-  runtime       = "python3.12"
-  timeout       = 600
-  memory_size   = 1024
+  timeout       = 900
+  memory_size   = 2048
+  package_type  = "Image"
 
-  # ファイルロード
-  filename         = data.archive_file.lambda_zip.output_path
-  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
+  image_uri = "${aws_ecr_repository.j_platpat.repository_url}:latest"
 
   environment {
     variables = {
@@ -96,19 +104,16 @@ resource "aws_lambda_function" "j_platpat_checker" {
     }
   }
 
-  layers = var.lambda_layers
-
-  vpc_config {
-    subnet_ids         = var.subnet_ids
-    security_group_ids = var.security_group_ids
+  # VPC config is optional - only include if subnets are specified
+  dynamic "vpc_config" {
+    for_each = length(var.subnet_ids) > 0 ? [1] : []
+    content {
+      subnet_ids         = var.subnet_ids
+      security_group_ids = var.security_group_ids
+    }
   }
-}
 
-# Lambda パッケージ（ZIP）
-data "archive_file" "lambda_zip" {
-  type        = "zip"
-  source_dir  = var.lambda_source_dir
-  output_path = "${path.module}/.terraform/lambda.zip"
+  depends_on = [aws_ecr_repository.j_platpat]
 }
 
 # EventBridge ルール
@@ -150,7 +155,9 @@ output "s3_bucket_name" {
   description = "Name of the S3 bucket for state"
 }
 
-output "eventbridge_rule_arn" {
-  value       = aws_cloudwatch_event_rule.j_platpat_schedule.arn
-  description = "ARN of the EventBridge rule"
+output "ecr_repository_url" {
+  value       = aws_ecr_repository.j_platpat.repository_url
+  description = "ECR repository URL for Lambda image"
 }
+
+output "eventbrid
