@@ -90,10 +90,13 @@ if (-not (Test-Path "venv")) {
 }
 
 # Activate virtual environment
-if ($PSVersionTable.Platform -eq "Win32NT" -or $PSVersionTable.OS -like "*Windows*" -or -not $PSVersionTable.Platform) {
+# For PowerShell 5.1 (Windows) compatibility, check OS type
+if ($PSVersionTable.OS -like "*Windows*" -or $null -eq $PSVersionTable.OS) {
+    # Windows PowerShell 5.1 or newer on Windows
     & ".\venv\Scripts\Activate.ps1"
 }
 else {
+    # PowerShell 6+ on Linux/Mac
     & "source ./venv/bin/activate"
 }
 
