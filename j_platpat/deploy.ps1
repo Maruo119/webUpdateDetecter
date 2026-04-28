@@ -2,7 +2,7 @@
 
 <#
 .SYNOPSIS
-    Deploy j-platpat monitoring Lambda function to AWS
+    Deploy j-platpat monitoring Lambda function to AWS (using container image)
 
 .PARAMETER StateBucketName
     S3 bucket name for state management
@@ -12,9 +12,6 @@
 
 .PARAMETER AwsRegion
     AWS region (default: ap-northeast-1)
-
-.PARAMETER TfVarsFile
-    Path to Terraform variables file (optional)
 
 .EXAMPLE
     .\deploy.ps1 `
@@ -30,10 +27,7 @@ param(
     [string]$SlackWebhookUrl,
 
     [Parameter(Mandatory = $false)]
-    [string]$AwsRegion = "ap-northeast-1",
-
-    [Parameter(Mandatory = $false)]
-    [string]$TfVarsFile
+    [string]$AwsRegion = "ap-northeast-1"
 )
 
 # Error handling
@@ -57,7 +51,7 @@ function Write-Error-Exit {
 Write-Header "Checking prerequisites..."
 
 $checks = @(
-    @{Name = "Python"; Command = "python --version"; Required = $true },
+    @{Name = "Docker"; Command = "docker --version"; Required = $true },
     @{Name = "Terraform"; Command = "terraform version"; Required = $true },
     @{Name = "AWS CLI"; Command = "aws --version"; Required = $true }
 )
@@ -77,53 +71,15 @@ foreach ($check in $checks) {
     }
 }
 
-# Install Python dependencies
-Write-Header "Installing Python dependencies..."
-
-$pythonVersion = python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"
-Write-Host "Python version: $pythonVersion"
-
-# Create virtual environment (optional, but recommended)
-if (-not (Test-Path "venv")) {
-    Write-Host "Creating Python virtual environment..."
-    python -m venv venv
+# Get AWS Account ID
+Write-Header "Getting AWS account information..."
+try {
+    $awsAccountId = aws sts get-caller-identity --query Account --output text
+    Write-Host "✓ AWS Account ID: $awsAccountId" -ForegroundColor Green
 }
-
-# Activate virtual environment
-Write-Host "Activating virtual environment..."
-& ".\venv\Scripts\Activate.ps1"
-
-# Install dependencies
-Write-Host "Installing requirements..."
-pip install -r requirements.txt
-
-# Playwright browsers
-Write-Host "Installing Playwright browsers..."
-python -m playwright install chromium
-
-# Prepare Lambda package
-Write-Header "Preparing Lambda deployment package..."
-
-$lambdaDir = ".\src"
-$packageDir = ".\.terraform\lambda_package"
-
-if (Test-Path $packageDir) {
-    Remove-Item $packageDir -Recurse -Force
+catch {
+    Write-Error-Exit "✗ Failed to get AWS account ID: $_"
 }
-
-New-Item -ItemType Directory -Path $packageDir | Out-Null
-
-# Copy source files
-Copy-Item "$lambdaDir\*" $packageDir -Recurse -Exclude @("__pycache__", "*.pyc")
-
-# Install dependencies into package
-pip install -r requirements.txt -t "$packageDir" --platform manylinux2014_x86_64 --python-version 312 --only-binary=:all: --force-reinstall
-
-# Verify package
-if (-not (Test-Path "$packageDir\lambda_function.py")) {
-    Write-Error-Exit "✗ Lambda function file not found in package"
-}
-Write-Host "✓ Lambda package prepared" -ForegroundColor Green
 
 # Terraform setup
 Write-Header "Setting up Terraform..."
@@ -132,7 +88,6 @@ if (-not (Test-Path "terraform")) {
     New-Item -ItemType Directory -Path "terraform" | Out-Null
 }
 
-# Copy Terraform files
 if (Test-Path "main.tf") {
     Copy-Item "main.tf" "terraform\" -Force
 } else {
@@ -151,7 +106,6 @@ $tfvarsContent = @"
 region              = "$AwsRegion"
 state_bucket_name   = "$StateBucketName"
 slack_webhook_url   = "$SlackWebhookUrl"
-lambda_source_dir   = "../.terraform/lambda_package"
 "@
 
 Set-Content -Path $tfvarsPath -Value $tfvarsContent -Encoding UTF8
@@ -183,14 +137,8 @@ finally {
     Pop-Location
 }
 
-# Terraform apply
-Write-Header "Applying Terraform deployment..."
-$confirmation = Read-Host "Do you want to apply this Terraform plan? (yes/no)"
-if ($confirmation -ne "yes") {
-    Write-Host "Deployment cancelled" -ForegroundColor Yellow
-    exit 0
-}
-
+# Terraform apply (creates ECR repo)
+Write-Header "Applying Terraform deployment (creating ECR repository)..."
 Push-Location "terraform"
 try {
     terraform apply tfplan
@@ -201,6 +149,58 @@ catch {
 }
 finally {
     Pop-Location
+}
+
+# Get ECR repository URL
+Write-Header "Building and pushing Docker image..."
+Push-Location "terraform"
+$ecrRepoUrl = terraform output -raw ecr_repository_url
+Pop-Location
+Write-Host "ECR Repository URL: $ecrRepoUrl" -ForegroundColor Cyan
+
+# AWS ECR login
+Write-Host "Logging in to Amazon ECR..."
+$ecrLoginCmd = aws ecr get-login-password --region $AwsRegion | docker login --username AWS --password-stdin $ecrRepoUrl
+if ($LASTEXITCODE -ne 0) {
+    Write-Error-Exit "✗ Failed to login to ECR"
+}
+Write-Host "✓ Successfully logged in to ECR" -ForegroundColor Green
+
+# Build Docker image
+Write-Host "Building Docker image..."
+docker build -t j-platpat-checker:latest .
+if ($LASTEXITCODE -ne 0) {
+    Write-Error-Exit "✗ Docker build failed"
+}
+Write-Host "✓ Docker image built successfully" -ForegroundColor Green
+
+# Tag image for ECR
+Write-Host "Tagging image for ECR..."
+docker tag j-platpat-checker:latest "$ecrRepoUrl`:latest"
+if ($LASTEXITCODE -ne 0) {
+    Write-Error-Exit "✗ Failed to tag image"
+}
+Write-Host "✓ Image tagged successfully" -ForegroundColor Green
+
+# Push image to ECR
+Write-Host "Pushing image to ECR..."
+docker push "$ecrRepoUrl`:latest"
+if ($LASTEXITCODE -ne 0) {
+    Write-Error-Exit "✗ Failed to push image to ECR"
+}
+Write-Host "✓ Image pushed to ECR successfully" -ForegroundColor Green
+
+# Update Lambda function with new image
+Write-Header "Updating Lambda function..."
+try {
+    aws lambda update-function-code `
+        --function-name j-platpat-checker `
+        --image-uri "$ecrRepoUrl`:latest" `
+        --region $AwsRegion | Out-Null
+    Write-Host "✓ Lambda function updated with new image" -ForegroundColor Green
+}
+catch {
+    Write-Error-Exit "✗ Failed to update Lambda function: $_"
 }
 
 # Verify Lambda function
@@ -216,6 +216,6 @@ catch {
 
 Write-Header "Deployment complete!"
 Write-Host "Next steps:" -ForegroundColor Green
-Write-Host "  1. View logs: aws logs tail /aws/lambda/j-platpat-checker --follow"
-Write-Host "  2. Manual test: aws lambda invoke --function-name j-platpat-checker response.json"
-Write-Host "  3. Monitor: aws events describe-rule --name j-platpat-checker-schedule"
+Write-Host "  1. View logs: aws logs tail /aws/lambda/j-platpat-checker --follow --region $AwsRegion"
+Write-Host "  2. Manual test: aws lambda invoke --function-name j-platpat-checker --region $AwsRegion response.json"
+Write-Host "  3. Monitor: aws events describe-rule --name j-platpat-checker-schedule --region $AwsRegion"
