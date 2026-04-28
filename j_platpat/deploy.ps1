@@ -90,7 +90,7 @@ if (-not (Test-Path "venv")) {
 }
 
 # Activate virtual environment
-if ($IsWindows) {
+if ($PSVersionTable.Platform -eq "Win32NT" -or $PSVersionTable.OS -like "*Windows*" -or -not $PSVersionTable.Platform) {
     & ".\venv\Scripts\Activate.ps1"
 }
 else {
@@ -221,4 +221,5 @@ catch {
 Write-Header "Deployment complete!"
 Write-Host "Next steps:" -ForegroundColor Green
 Write-Host "  1. View logs: aws logs tail /aws/lambda/j-platpat-checker --follow"
-Write-Host "  2. Manual test: aws lambda invoke --function-name j-platpat-c
+Write-Host "  2. Manual test: aws lambda invoke --function-name j-platpat-checker response.json"
+Write-Host "  3. Monitor: aws events describe-rule --name j-platpat-checker-schedule"
